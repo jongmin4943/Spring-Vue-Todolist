@@ -1,0 +1,36 @@
+package org.min.todo.dto;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class PageDto {
+
+    @Builder.Default
+    private int page = 1;
+    @Builder.Default
+    private int size = 10;
+
+    private String keyword;
+
+    public void setPage(int page) {
+        this.page = page > 0 ? page : 1;
+    }
+
+    public void setSize(int size) {
+        this.size = size < 10 ? size : 10;
+    }
+
+    @JsonIgnore
+    public Pageable getPageable() {
+        return PageRequest.of(this.page - 1, this.size);
+    }
+
+}
