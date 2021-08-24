@@ -2,8 +2,11 @@ package org.min.todo.service;
 
 import org.min.todo.dto.PageDto;
 import org.min.todo.dto.TodoDto;
+import org.min.todo.dto.TodoListDto;
 import org.min.todo.entity.Todo;
 import org.springframework.data.domain.Page;
+
+import java.util.List;
 
 public interface TodoService {
 
@@ -11,11 +14,11 @@ public interface TodoService {
 
     TodoDto modify(TodoDto dto);
 
-    Page<TodoDto> getAllTodos(PageDto pageDto);
+    TodoListDto getAllTodos(PageDto pageDto);
 
     TodoDto getTodo(Long tno);
 
-    String remove(Long tno);
+    String remove(List<Long> tnos);
 
     TodoDto complete(Long tno);
 
@@ -25,7 +28,6 @@ public interface TodoService {
                 .tno(todo.getTno())
                 .title(todo.getTitle())
                 .done(todo.isDone())
-                .deleted(todo.isDeleted())
                 .createdDate(todo.getCreateDate())
                 .updatedDate(todo.getUpdatedDate())
                 .build();
@@ -35,7 +37,6 @@ public interface TodoService {
                 .tno(dto.getTno())
                 .title(dto.getTitle())
                 .done(dto.isDone())
-                .deleted(dto.isDeleted())
                 .build();
     }
 }

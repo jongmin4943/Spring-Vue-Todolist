@@ -19,8 +19,6 @@ public class TodoDto {
 
     private boolean done;
 
-    private boolean deleted;
-
     private LocalDateTime createdDate;
 
     private LocalDateTime updatedDate;

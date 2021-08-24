@@ -1,5 +1,6 @@
 package org.min.todo.entity;
 import lombok.*;
+import org.min.todo.dto.TodoDto;
 
 import javax.persistence.*;
 
@@ -20,5 +21,12 @@ public class Todo extends BaseEntity{
 
     private boolean done;
 
-    private boolean deleted;
+    public void modify(TodoDto dto) {
+        this.title = dto.getTitle();
+    }
+
+    public void done() {
+        this.done = !this.done;
+    }
+
 }
