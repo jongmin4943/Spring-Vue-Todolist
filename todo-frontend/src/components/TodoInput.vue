@@ -2,32 +2,43 @@
   <div>
     <input 
       type="text"
-      v-model="newTodo"
+      v-model="todoInput"
       placeholder="할 일 ..."
-      v-on:keyup.enter="addTodo"
+      v-on:keyup.enter="addTodoEmit"
+      class="input"
     />
-    <button v-on:click="addTodo">입력</button>
+    <button v-on:click="addTodoEmit" class="btn">등록</button>
   </div>
 </template>
 <script>
 export default {
-  data() {
+  data(){
     return {
-      newTodo: "",
-    };
+      todoInput:''
+    }
+  },
+  props:{
+    addTodo:Function,
   },
   methods: {
-    addTodo() {
-      if(this.newTodo.trim()) {
-        console.log(this.newTodo)
-        this.newTodo = "";
+    addTodoEmit() {
+      if(this.todoInput.trim()) {
+        this.$emit("addTodo",this.todoInput);
+        this.todoInput = ''
       } else {
-        console.log("내용이 없다.")
+        alert("내용을 입력 해주세요")
       }
     }
   },
 }
 </script>
 <style>
-  
+.input{
+  width: 50vw;
+  height: 5vh;
+}
+.btn{
+  height: 5vh;
+  margin: 5px;
+}
 </style>
