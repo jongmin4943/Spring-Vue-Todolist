@@ -1,58 +1,44 @@
 <template>
   <div>
     <div>
-      <span class="pages cursor" v-if="prev" v-on:click="movePage(start-1)">◀</span>
+      <span class="pages cursor" v-if="getPageInfo.prev" @click="movePage(getPageInfo.start-1)">◀</span>
       <span 
-      v-bind:class="[currPage != n ? 'cursor':'current', {pages:true}]"
-      v-for="n in pageList" 
+      :class="[currPage != n ? 'cursor':'current', {pages:true}]"
+      v-for="n in getPageInfo.pageList" 
       :key="n"
-      v-on:click="movePage(n)"
+      @click="movePage(n)"
       >[{{n}}]</span>
-      <span class="pages cursor" v-if="next" v-on:click="movePage(end+1)">▶</span>
+      <span class="pages cursor" v-if="getPageInfo.next" @click="movePage(getPageInfo.end+1)">▶</span>
     </div>
     <div class="search">
       <input 
         type="text"
         v-model="searchInput"
         placeholder="검색어"
-        v-on:keyup.enter="searchTodo"
+        @keyup.enter="searchTodo"
         class="search_input"
       />
-      <button v-on:click="searchTodo">검색</button>
+      <button @click="searchTodo">검색</button>
     </div>
   </div>
 </template>
 <script>
+import {mapGetters} from 'vuex';
 export default {
   data() {
     return {
       searchInput: '',
     }
   },
-  props: {
-    pageInfo: Object,
-  },
   computed: {
-    pageList: function() {
-      return this.pageInfo.pageList;
-    },
-    prev: function() {
-      return this.pageInfo.prev;
-    },
-    next: function() {
-      return this.pageInfo.next;
-    },
-    start: function() {
-      return this.pageInfo.start;
-    },
-    end: function() {
-      return this.pageInfo.end;
-    },
+    ...mapGetters({
+      getPageInfo : 'getPageInfo'
+    }),
     currPage: function() {
-      return this.$route.query.page;
+      return this.$route.query.page || 1;
     },
     keyword: function() {
-      return this.$route.query.keyword;
+      return this.$route.query.keyword ?? '';
     }
   },
   methods: {

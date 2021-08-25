@@ -4,26 +4,38 @@
       type="text"
       v-model="todoInput"
       placeholder="할 일 ..."
-      v-on:keyup.enter="addTodoEmit"
+      @keyup.enter="insertTodo"
       class="input"
     />
-    <button v-on:click="addTodoEmit" class="btn">등록</button>
+    <button @click="insertTodo" class="btn">등록</button>
   </div>
 </template>
 <script>
+import {mapActions} from 'vuex'
 export default {
   data(){
     return {
       todoInput:''
     }
   },
-  props:{
-    addTodo:Function,
+  computed: {
+    currPage: function() {
+      return this.$route.query.page || 1;
+    },
+    keyword: function() {
+      return this.$route.query.keyword ?? '';
+    }
   },
   methods: {
-    addTodoEmit() {
+    ...mapActions(
+      ['addTodo']
+    ),
+    insertTodo() {
       if(this.todoInput.trim()) {
-        this.$emit("addTodo",this.todoInput);
+        this.addTodo(this.todoInput);
+        if(this.currPage != 1 || this.keyword != '') {
+          this.$router.push({name: 'Todo', query: {page:1,keyword:''}})
+        }
         this.todoInput = ''
       } else {
         alert("내용을 입력 해주세요")

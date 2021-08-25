@@ -12,26 +12,27 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="todo in todoList" :key="todo.tno" v-bind:class="[todo.done? doneClass:'']">
+          <tr v-for="todo in todoList" :key="todo.tno" :class="[todo.done? doneClass:'']">
             <td>{{todo.tno}}</td>
             <td>{{todo.title}}</td>
             <td>{{todo.createdDate.substr(0,10)}} {{todo.createdDate.substr(11,8)}}</td>
-            <td><input type="checkbox" v-model="checkedTodos" v-bind:value="todo.tno"></td>
+            <td><input type="checkbox" v-model="checkedTodos" :value="todo.tno"></td>
             <td>
-              <input type="button" value="수정" v-on:click="editTodoEmit(todo.tno)">
-              <input type="button" v-bind:value="[todo.done? '취소':'완료']" v-on:click="doneTodoEmit(todo.tno)">
+              <input type="button" value="수정">
+              <input type="button" :value="[todo.done? '취소':'완료']" @click="completeTodo(todo.tno)">
             </td>
           </tr>
         </tbody>
       </table>
     </div>
     <div class="deleteBtn">
-      <button @click="deleteTodosEmit">선택 삭제</button>
+      <button @click="removeTodos">선택 삭제</button>
     </div>
   </div>
 </template>
 <script>
-
+import {mapGetters} from 'vuex';
+import {mapActions} from 'vuex'
 export default {
   data() { 
     return {
@@ -39,25 +40,40 @@ export default {
       checkedTodos: [],
     }
   },
-  props: {
-    todoList: Array,
-    doneTodo: Function,
-    deleteTodos: Function,
+  computed: {
+    ...mapGetters({
+      todoList: 'getTodoList',
+    }),
+    currPage: function() {
+      return this.$route.query.page || 1;
+    },
+    keyword: function() {
+      return this.$route.query.keyword ?? '';
+    }
+  },
+  created() {
+    this.getTodos({page:this.currPage,keyword:this.keyword});
   },
   methods: {
-    doneTodoEmit(tno) {
-      this.$emit("doneTodo",tno)
+    ...mapActions(['doneTodo','deleteTodos','getTodos']),
+    completeTodo(tno) {
+      this.doneTodo(tno)
     },
-    deleteTodosEmit() {
-      if(this.checkedTodos.length>0) {
-        this.$emit("deleteTodos",this.checkedTodos);
-        this.checkedTodos=[];
+    removeTodos() {
+      if(this.checkedTodos.length > 0) {
+        this.deleteTodos(this.checkedTodos);
+        this.checkedTodos = [];
       }
-    },
-    editTodoEmit(tno) {
-      this.$emit("editTodo",tno);
-    },
-  }
+    }
+  },
+  watch: {
+    $route(to) {
+      this.getTodos({
+        page:to.query.page,
+        keyword:to.query.keyword ?? ''
+      });
+    }
+  },
 }
 </script>
 <style>

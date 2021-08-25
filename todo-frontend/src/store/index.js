@@ -9,7 +9,7 @@ export const store = new Vuex.Store({
     state:{ //data역할
         todoData: {
             todoList : [],
-            pageInfo: {page:1,keyword:''},
+            pageInfo: {page:1,keyword:'',end:1,totalCount:0},
         }
     },
     getters:{ //computed역할
@@ -22,28 +22,27 @@ export const store = new Vuex.Store({
     },
     mutations:{ // state변화, 동기 처리
         async refreshTodos(state) {
-            state.todoData = await todoService.fetchTodoList(state.todoData.pageInfo);
+            const result = await todoService.fetchTodoList(state.todoData.pageInfo);
+            state.todoData = result.data;
         },
     },
     actions:{ // mutation 로직처리, 비동기 처리
         async getTodos(context,payload) {
-            console.log("getTodos ", payload)
+            context.state.todoData.pageInfo.page = payload.page || 1;
+            context.state.todoData.pageInfo.keyword = payload.keyword ?? '';
             context.commit('refreshTodos'); //mutation 동작
         },
         async addTodo(context,payload) {
-            console.log("addTodo ", payload)
-            const result = await todoService.insertTodo(payload);
-            context.commit('refreshTodos',result) 
+            await todoService.insertTodo({title:payload});
+            context.commit('refreshTodos') 
         },
         async doneTodo(context,payload) {
-            console.log("doneTodo ", payload)
-            const result = await todoService.doneTodo(payload);
-            context.commit('refreshTodos',result);
+            await todoService.doneTodo(payload);
+            context.commit('refreshTodos');
         },
-        async removeTodo(context,payload) {
-            console.log("removeTodo ", payload)
-            const result = await todoService.removeTodo(payload);
-            context.commit('refreshTodos',result);
+        async deleteTodos(context,payload) {
+            await todoService.removeTodo(payload);
+            context.commit('refreshTodos');
         },
     },
 })
