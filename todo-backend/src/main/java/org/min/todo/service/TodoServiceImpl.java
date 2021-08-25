@@ -41,7 +41,7 @@ public class TodoServiceImpl implements TodoService{
     public TodoListDto getAllTodos(PageDto pageDto) {
         Page<Todo> todos = todoRepository.getSearchedList(pageDto.getKeyword(),pageDto.getPageable());
         List<TodoDto> todoList = todos.stream().map(todo->entityToDTO(todo)).collect(Collectors.toList());
-        PageInfo pageInfo = new PageInfo(pageDto.getPage(), pageDto.getSize(), (int) todos.getTotalElements());
+        PageInfo pageInfo = new PageInfo(pageDto.getPage(), pageDto.getSize(), (int) todos.getTotalElements(), pageDto.getKeyword());
         return TodoListDto.builder().todoList(todoList).pageInfo(pageInfo).build();
     }
 

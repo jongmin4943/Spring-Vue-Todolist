@@ -67,7 +67,6 @@ export default {
       } else {
         alert("검색어 를 입력해주세요")
       }
-      this.searchInput = '';
     }
   },
 }

@@ -14,12 +14,13 @@ public class PageInfo {
     private List<Integer> pageList;
     private boolean prev, next;
     private int start,end;
+    private String keyword;
 
-    public PageInfo(int page, int size, int totalCount) {
+    public PageInfo(int page, int size, int totalCount,String keyword) {
         this.page = page;
         this.size = size;
         this.totalCount = totalCount;
-
+        this.keyword = keyword != null? keyword: "";
         // 총 페이지 수
         int totalPage = (int)(Math.ceil(totalCount/(double)size));
 

@@ -35,6 +35,7 @@ export default {
   methods: {
     async getTodos(pageData = {page:1}) {
       const result = await todoService.fetchTodoList(pageData);
+      console.log(result)
       this.todoList = result.data.todoList;
       this.pageInfo = result.data.pageInfo; 
     },

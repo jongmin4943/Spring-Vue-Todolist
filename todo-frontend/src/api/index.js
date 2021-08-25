@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const instance = axios.create({
+export const instance = axios.create({
   // baseURL: "http://localhost:8080/api",
   timeout: 10000,
   params: {},
@@ -23,5 +23,3 @@ instance.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-
-export default instance;
