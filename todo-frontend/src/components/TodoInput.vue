@@ -1,13 +1,12 @@
 <template>
-  <div>
-    <input 
-      type="text"
+  <div class='add_input'>
+    <textarea
       v-model="todoInput"
       placeholder="할 일 ..."
       @keyup.enter="insertTodo"
       class="input"
     />
-    <button @click="insertTodo" class="btn">등록</button>
+    <el-button type="primary" icon="el-icon-edit" @click="insertTodo"/>
   </div>
 </template>
 <script>
@@ -38,7 +37,11 @@ export default {
         }
         this.todoInput = ''
       } else {
-        alert("내용을 입력 해주세요")
+        this.$message({
+          showClose: true,
+          message: '할 일을 입력 해주세요.',
+          type: 'error'
+        });
       }
     }
   },
@@ -48,9 +51,12 @@ export default {
 .input{
   width: 50vw;
   height: 5vh;
+  resize: none;
 }
 .btn{
-  height: 5vh;
   margin: 5px;
+}
+.add_input{
+  display: inline-flex;
 }
 </style>

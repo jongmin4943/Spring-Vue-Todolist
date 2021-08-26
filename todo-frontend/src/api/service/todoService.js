@@ -11,6 +11,13 @@ const todoService = () => {
     });
   }
 
+  const fecthTodo = async (tno) => {
+    return await instance({
+      url: `/api/todo/${tno}`,
+      method: 'get'
+    });
+  }
+
   const insertTodo = async (data) => {
     return await instance({
       url: "/api/todo/",
@@ -19,10 +26,10 @@ const todoService = () => {
     })
   }
   const updateTodo = async (data) => {
-    console.log("updating data : " ,data);
     return await instance({
       url: "/api/todo/",
-      method: 'put'
+      method: 'put',
+      data: data
     })
   }
   const doneTodo = async (tno) => {
@@ -40,7 +47,7 @@ const todoService = () => {
   }
 
   
-  return {fetchTodoList,insertTodo,updateTodo,doneTodo,removeTodo}
+  return {fetchTodoList,fecthTodo,insertTodo,updateTodo,doneTodo,removeTodo,}
 
 }
 

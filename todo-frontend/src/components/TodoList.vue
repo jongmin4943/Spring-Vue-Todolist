@@ -1,61 +1,87 @@
 <template>
   <div>
     <div>
-      <table class="table">
-        <thead>
-          <tr>
-            <th class="no">번호</th>
-            <th class="title">할 일</th>
-            <th class="date">작성일</th>
-            <th class="check">체크박스</th>
-            <th class="option">옵션</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="todo in todoList" :key="todo.tno" :class="[todo.done? doneClass:'']">
-            <td>{{todo.tno}}</td>
-            <td>{{todo.title}}</td>
-            <td>{{todo.createdDate.substr(0,10)}} {{todo.createdDate.substr(11,8)}}</td>
-            <td><input type="checkbox" v-model="checkedTodos" :value="todo.tno"></td>
-            <td>
-              <input type="button" value="수정">
-              <input type="button" :value="[todo.done? '취소':'완료']" @click="completeTodo(todo.tno)">
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <ul>
+        <li>
+          <div class = 'todo_items'>
+            <div class="no">
+              번호
+            </div>
+            <div class="title">
+              할일
+            </div>
+            <div class="date">
+              작성일
+            </div>
+            <div class="check">
+              체크박스
+            </div>
+            <div class="option">
+              옵션
+            </div>
+          </div>
+        </li>
+        <li v-for="todo in todoList" :key="todo.tno" :class="todo.done? 'done':''">
+          <div class = 'todo_items' v-if="todoOnEdit.tno != todo.tno">
+            <div class="no">
+              {{todo.tno}}
+            </div>
+            <div class="title">
+              {{todo.title}}
+            </div>
+            <div class="date">
+            {{todo.createdDate.substr(0,10)}} {{todo.createdDate.substr(11,8)}}
+            </div>
+            <div class="check">
+              <input type="checkbox" v-model="checkedTodos" :value="todo.tno">
+            </div>
+            <div class="option">
+              <el-button :type="todo.done? 'info':'success'" icon="el-icon-check" circle :value="todo.done? '취소':'완료'" @click="completeTodo(todo.tno)"/>
+              <el-button type="primary" icon="el-icon-edit" circle disabled v-if="todo.done"/>
+              <el-button type="primary" icon="el-icon-edit" circle @click="startEditing(todo.tno)" v-else/>
+            </div>
+          </div>
+          <div v-else>
+            <TodoEditInput/>
+          </div>
+        </li>
+      </ul>
     </div>
     <div class="deleteBtn">
-      <button @click="removeTodos">선택 삭제</button>
+      <el-button type="danger" round @click="removeTodos">선택 삭제</el-button>
     </div>
   </div>
 </template>
 <script>
-import {mapGetters} from 'vuex';
-import {mapActions} from 'vuex'
+import {mapGetters, mapMutations} from 'vuex';
+import {mapActions} from 'vuex';
+import TodoEditInput from './TodoEditInput.vue'
+
 export default {
+  components:{TodoEditInput},
   data() { 
     return {
-      doneClass: 'done',
       checkedTodos: [],
     }
   },
   computed: {
     ...mapGetters({
       todoList: 'getTodoList',
+      todoOnEdit: 'getTodoOnEdit',
     }),
     currPage: function() {
       return this.$route.query.page || 1;
     },
     keyword: function() {
       return this.$route.query.keyword ?? '';
-    }
+    },
   },
   created() {
     this.getTodos({page:this.currPage,keyword:this.keyword});
   },
   methods: {
     ...mapActions(['doneTodo','deleteTodos','getTodos']),
+    ...mapMutations(['startEdit']),
     completeTodo(tno) {
       this.doneTodo(tno)
     },
@@ -64,6 +90,9 @@ export default {
         this.deleteTodos(this.checkedTodos);
         this.checkedTodos = [];
       }
+    },
+    startEditing(tno) {
+      this.startEdit(tno);
     }
   },
   watch: {
@@ -77,14 +106,6 @@ export default {
 }
 </script>
 <style>
-.table{
-  width: 100%;
-  border-collapse: collapse;
-}
-td { 
-  vertical-align: middle;
-  word-break: break-all;
-}
 .done {
   text-decoration: line-through;
   background-color: #dddddd;
@@ -107,5 +128,11 @@ td {
 .deleteBtn{
   display: flex;
   justify-content: flex-end;
+}
+ul{
+  list-style-type: none;
+}
+.todo_items {
+  display: flex;
 }
 </style>
