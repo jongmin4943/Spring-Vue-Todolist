@@ -1,5 +1,5 @@
 import axios from "axios";
-
+import { Notification } from 'element-ui';
 export const instance = axios.create({
   // baseURL: "http://localhost:8080/api",
   timeout: 10000,
@@ -19,7 +19,7 @@ instance.interceptors.response.use(
     return config;
   },
   (error) => {
-    console.log(error.response);
+    Notification.error(error.response.data.error || '오류');
     return Promise.reject(error);
   }
 );
