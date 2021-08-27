@@ -1,17 +1,16 @@
-package org.min.todo.dto;
+package org.min.todo.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class TodoListDto {
-    private List<TodoDto> todoList;
-    private PageInfo pageInfo;
+public class TokenDto {
+
+    private String accessToken;
+
 }

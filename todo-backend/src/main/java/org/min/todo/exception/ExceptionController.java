@@ -4,8 +4,11 @@ package org.min.todo.exception;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import java.nio.file.AccessDeniedException;
 
 @RestControllerAdvice
 public class ExceptionController {
@@ -25,5 +28,9 @@ public class ExceptionController {
         return new ResponseEntity<>(new ExceptionResponse(500, "잘못된 요청입니다."), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @ExceptionHandler(CustomException.class)
+    public ResponseEntity<?> passwordError(Exception e) {
+        return new ResponseEntity<>(new ExceptionResponse(400, e.getMessage()), HttpStatus.BAD_REQUEST);
+    }
 
 }

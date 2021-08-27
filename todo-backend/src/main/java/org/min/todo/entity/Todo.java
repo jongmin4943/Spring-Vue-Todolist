@@ -1,6 +1,6 @@
 package org.min.todo.entity;
 import lombok.*;
-import org.min.todo.dto.TodoDto;
+import org.min.todo.dto.todo.TodoDto;
 
 import javax.persistence.*;
 
@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
+@ToString(exclude = {"user"})
 public class Todo extends BaseEntity{
 
     @Id
@@ -20,6 +20,9 @@ public class Todo extends BaseEntity{
     private String title;
 
     private boolean done;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
 
     public void modify(TodoDto dto) {
         this.title = dto.getTitle();

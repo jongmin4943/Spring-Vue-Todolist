@@ -2,11 +2,13 @@ package org.min.todo.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.min.todo.dto.PageDto;
-import org.min.todo.dto.TodoDto;
-import org.min.todo.dto.TodoListDto;
+import org.min.todo.dto.todo.TodoDto;
+import org.min.todo.dto.todo.TodoListDto;
+import org.min.todo.security.jwt.JwtTokenProvider;
+import org.min.todo.security.principal.PrincipalDetails;
 import org.min.todo.service.TodoService;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,7 +21,6 @@ public class TodoController {
 
     private final TodoService todoService;
 
-
     @PostMapping("/")
     public ResponseEntity<TodoDto> insertTodo(@RequestBody TodoDto dto) {
         return ResponseEntity.ok(todoService.register(dto));
@@ -31,8 +32,8 @@ public class TodoController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<TodoListDto> getTodos(PageDto pageDto) {
-        return ResponseEntity.ok(todoService.getAllTodos(pageDto));
+    public ResponseEntity<TodoListDto> getTodos(PageDto pageDto, @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        return ResponseEntity.ok(todoService.getAllTodos(pageDto, principalDetails.getUsername()));
     }
 
     @GetMapping("/{tno}")

@@ -1,4 +1,4 @@
-package org.min.todo.dto;
+package org.min.todo.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,13 +11,10 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class TodoDto {
+public class UserDto {
+    private String username;
 
-    private Long tno;
-
-    private String title;
-
-    private boolean done;
+    private String password;
 
     private LocalDateTime createdDate;
 

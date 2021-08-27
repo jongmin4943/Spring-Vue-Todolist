@@ -1,25 +1,22 @@
 package org.min.todo.service;
 
 import lombok.RequiredArgsConstructor;
-import org.min.todo.dto.PageDto;
-import org.min.todo.dto.PageInfo;
-import org.min.todo.dto.TodoDto;
-import org.min.todo.dto.TodoListDto;
+import org.min.todo.dto.*;
+import org.min.todo.dto.todo.TodoDto;
+import org.min.todo.dto.todo.TodoListDto;
+import org.min.todo.dto.todo.TodoUserDto;
 import org.min.todo.entity.Todo;
 import org.min.todo.repository.TodoRepository;
+import org.min.todo.service.TodoService;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class TodoServiceImpl implements TodoService{
+public class TodoServiceImpl implements TodoService {
 
     private final TodoRepository todoRepository;
 
@@ -38,10 +35,10 @@ public class TodoServiceImpl implements TodoService{
     }
 
     @Override
-    public TodoListDto getAllTodos(PageDto pageDto) {
-        Page<Todo> todos = todoRepository.getSearchedList(pageDto.getKeyword(),pageDto.getPageable());
-        List<TodoDto> todoList = todos.stream().map(todo->entityToDTO(todo)).collect(Collectors.toList());
-        PageInfo pageInfo = new PageInfo(pageDto.getPage(), pageDto.getSize(), (int) todos.getTotalElements(), pageDto.getKeyword());
+    public TodoListDto getAllTodos(PageDto pageDto, String username) {
+        Page<Object[]> result = todoRepository.getSearchedListWithUser(pageDto.getKeyword(),pageDto.getPageable(), username);
+        List<TodoUserDto> todoList = result.stream().map(arr->arrToDTO(arr)).collect(Collectors.toList());
+        PageInfo pageInfo = new PageInfo(pageDto.getPage(), pageDto.getSize(), (int) result.getTotalElements(), pageDto.getKeyword());
         return TodoListDto.builder().todoList(todoList).pageInfo(pageInfo).build();
     }
 

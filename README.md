@@ -6,16 +6,20 @@ vue cli 이용
 npm install -g @vue/cli
 vue create todo-frontend
 ```
-default 옵션 선택, yarn 선택
+default 옵션 선택, yarn 선택 <br>
+element-ui <br>
+vuex <br>
+vue-router <br>
+axios <br>
+라이브러리 이용
 
 ## Back-End - Spring Boot
 Spring Web <br>
 Spring Data JPA <br>
 Mariadb <br>
 Lombok <br>
-
-예정 <br>
 Spring Security <br>
+Jwt <br>
 Querydsl
 
 ## DataBase - MaridDB
