@@ -2,6 +2,11 @@ import Vue from "vue";
 import Router from "vue-router";
 Vue.use(Router);
 
+const Todo = () => import(/* webpackChunkName: "Todo" */ "../pages/Todo.vue");
+const User = () => import(/* webpackChunkName: "User" */ "../pages/User.vue");
+const LogIn = () => import(/* webpackChunkName: "LogIn" */ "../pages/LogIn.vue");
+const SignUp = () => import(/* webpackChunkName: "SignUp" */ "../pages/SignUp.vue");
+
 const isUserLoggedIn = true;
 
 export const router = new Router({
@@ -11,36 +16,27 @@ export const router = new Router({
       path: "/",
       name: "Todo",
       beforeEnter: (to, from, next) => {
-        if (isUserLoggedIn) {
-          next();
-        } else {
-          next("/user/login");
-        }
+        isUserLoggedIn ? next() : next("/user/login");
       },
-      component: () => import("../pages/Todo.vue"),
+      component: Todo,
     },
     {
       path: "/user",
       name: "User",
       beforeEnter: (to, from, next) => {
-        if (!isUserLoggedIn) {
-          next();
-        } else {
-          next("/user/login");
-        }
+        !isUserLoggedIn ? next() : next("/");
       },
-      component: () => import("../pages/User.vue"),
+      component: User,
       children: [
         {
           path: ":login",
           name: "LogIn",
-
-          component: () => import("../pages/LogIn.vue"),
+          component: LogIn,
         },
         {
           path: ":signup",
           name: "SignUp",
-          component: () => import("../pages/SignUp.vue"),
+          component: SignUp,
         },
       ],
     },
