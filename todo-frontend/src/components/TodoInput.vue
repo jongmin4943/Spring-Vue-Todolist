@@ -11,18 +11,11 @@
 </template>
 <script>
 import {mapActions} from 'vuex'
+import {getPageKeywordQuery} from '../mixins/getPageKeywordQuery'
 export default {
   data(){
     return {
       todoInput:''
-    }
-  },
-  computed: {
-    currPage: function() {
-      return this.$route.query.page || 1;
-    },
-    keyword: function() {
-      return this.$route.query.keyword ?? '';
     }
   },
   methods: {
@@ -45,6 +38,7 @@ export default {
       }
     }
   },
+  mixins: [getPageKeywordQuery]
 }
 </script>
 <style>
@@ -52,9 +46,6 @@ export default {
   width: 50vw;
   height: 5vh;
   resize: none;
-}
-.btn{
-  margin: 5px;
 }
 .add_input{
   display: inline-flex;

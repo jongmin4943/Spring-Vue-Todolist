@@ -48,6 +48,7 @@
       </ul>
     </div>
     <div class="deleteBtn">
+      <el-button type="default" round @click="showAllTodos" v-if="keyword != ''">전체 목록</el-button>
       <el-button type="danger" round @click="removeTodos">선택 삭제</el-button>
     </div>
   </div>
@@ -56,6 +57,7 @@
 import {mapGetters, mapMutations} from 'vuex';
 import {mapActions} from 'vuex';
 import TodoEditInput from './TodoEditInput.vue'
+import {getPageKeywordQuery} from '../mixins/getPageKeywordQuery'
 
 export default {
   components:{TodoEditInput},
@@ -69,12 +71,6 @@ export default {
       todoList: 'getTodoList',
       todoOnEdit: 'getTodoOnEdit',
     }),
-    currPage: function() {
-      return this.$route.query.page || 1;
-    },
-    keyword: function() {
-      return this.$route.query.keyword ?? '';
-    },
   },
   created() {
     this.getTodos({page:this.currPage,keyword:this.keyword});
@@ -93,16 +89,21 @@ export default {
     },
     startEditing(tno) {
       this.startEdit(tno);
+    },
+    showAllTodos() {
+      this.$router.push({name: 'Todo', query: {page:1,keyword:''}});
+      this.getTodos({page:1,keyword:''})
     }
   },
-  watch: {
-    $route(to) {
-      this.getTodos({
-        page:to.query.page,
-        keyword:to.query.keyword ?? ''
-      });
-    }
-  },
+  // watch: {
+  //   $route(to) {
+  //     this.getTodos({
+  //       page:to.query.page,
+  //       keyword:to.query.keyword ?? ''
+  //     });
+  //   }
+  // },
+  mixins: [getPageKeywordQuery]
 }
 </script>
 <style>

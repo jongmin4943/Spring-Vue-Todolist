@@ -11,27 +11,22 @@
   </div>
 </template>
 <script>
-import {mapGetters} from 'vuex';
+import {mapActions, mapGetters} from 'vuex';
+import {getPageKeywordQuery} from '../mixins/getPageKeywordQuery'
 export default {
- 
   computed: {
-    ...mapGetters({
-      getPageInfo : 'getPageInfo'
-    }),
-    currPage: function() {
-      return this.$route.query.page || 1;
-    },
-    keyword: function() {
-      return this.$route.query.keyword ?? '';
-    }
+    ...mapGetters(['getPageInfo']),
   },
   methods: {
+    ...mapActions(['getTodos']),
     movePage (page) {
       if(this.currPage != page) {
-        this.$router.push({name: 'Todo', query: {page:page,keyword:this.keyword}})
+        this.$router.push({name: 'Todo', query: {page:page,keyword:this.keyword}});
+        this.getTodos({page:page})
       }
     },
   },
+  mixins: [getPageKeywordQuery]
 }
 </script>
 <style>

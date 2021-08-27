@@ -11,6 +11,7 @@
     </div>
 </template>
 <script>
+import { mapActions } from 'vuex';
 export default {
   data() {
     return {
@@ -18,14 +19,11 @@ export default {
     }
   },
   methods: {
-    movePage (page) {
-      if(this.currPage != page) {
-        this.$router.push({name: 'Todo', query: {page:page,keyword:this.keyword}})
-      }
-    },
+    ...mapActions(['getTodos']),
     searchTodo () {
       if(this.searchInput) {
-        this.$router.push({name: 'Todo', query: {page:1,keyword:this.searchInput}})
+        this.$router.push({name: 'Todo', query: {page:1,keyword:this.searchInput}});
+        this.getTodos({page:1,keyword:this.searchInput})
       } else {
         this.$message({
           showClose: true,

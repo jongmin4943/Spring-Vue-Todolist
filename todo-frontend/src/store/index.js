@@ -7,10 +7,8 @@ Vue.use(Vuex)
 export const store = new Vuex.Store({
 
     state:{ //data역할
-        todoData: {
-            todoList : [{tno:-1}],
-            pageInfo: {page:1,keyword:'',end:1,totalCount:0},
-        },
+        todoList : [{tno:-1}],
+        pageInfo: {page:1,keyword:''},
         todoOnEdit: {
             tno: -1,
             title: ''
@@ -18,10 +16,10 @@ export const store = new Vuex.Store({
     },
     getters:{ //computed역할
         getTodoList(state) {
-            return state.todoData.todoList
+            return state.todoList
         },
         getPageInfo(state) {
-            return state.todoData.pageInfo
+            return state.pageInfo
         },
         getTodoOnEdit(state) {
             return state.todoOnEdit
@@ -29,44 +27,44 @@ export const store = new Vuex.Store({
     },
     mutations:{ // state변화, 동기 처리
         refreshTodos(state,payload) {
-            state.todoData = payload;
+            state = Object.assign(state,payload); // shallow copy
         },
         startEdit(state,payload) {
-            state.todoOnEdit = state.todoData.todoList.find(todo =>{
+            state.todoOnEdit = state.todoList.find(todo =>{
                 return todo.tno == payload;
             })
         },
         cancelEdit(state) {
             state.todoOnEdit = { tno: -1, title: ''}
-        }
+        },
     },
     actions:{ // mutation 로직처리, 비동기 처리
         async getTodos({state,commit},payload) {
-            state.todoData.pageInfo.page = payload.page || 1;
-            state.todoData.pageInfo.keyword = payload.keyword ?? '';
-            const result = await todoService.fetchTodoList(state.todoData.pageInfo);
+            state.pageInfo = {...state.pageInfo, ...payload};
+            const result = await todoService.fetchTodoList(state.pageInfo);
             commit('refreshTodos',result.data);
         },
         async addTodo({state,commit},payload) {
             await todoService.insertTodo({title:payload});
-            const result = await todoService.fetchTodoList(state.todoData.pageInfo);
+            state.pageInfo = {...state.pageInfo, page:1,keyword:''};
+            const result = await todoService.fetchTodoList(state.pageInfo);
             commit('refreshTodos',result.data);
         },
         async doneTodo({state,commit},payload) {
             await todoService.doneTodo(payload);
-            const result = await todoService.fetchTodoList(state.todoData.pageInfo);
+            const result = await todoService.fetchTodoList(state.pageInfo);
             commit('refreshTodos',result.data);
         },
         async deleteTodos({state,commit},payload) {
             await todoService.removeTodo(payload);
-            const result = await todoService.fetchTodoList(state.todoData.pageInfo);
+            const result = await todoService.fetchTodoList(state.pageInfo);
             commit('refreshTodos',result.data);
         },
         async editTodo({state,commit},payload) {
             await todoService.updateTodo(payload);
-            const result = await todoService.fetchTodoList(state.todoData.pageInfo);
+            const result = await todoService.fetchTodoList(state.pageInfo);
             commit('refreshTodos',result.data);
             commit('cancelEdit');
-        }
+        },
     },
 })
