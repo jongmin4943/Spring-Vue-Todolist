@@ -3,8 +3,6 @@ package org.min.todo.service;
 import org.min.todo.dto.*;
 import org.min.todo.dto.todo.TodoDto;
 import org.min.todo.dto.todo.TodoListDto;
-import org.min.todo.dto.todo.TodoUserDto;
-import org.min.todo.dto.user.UserDto;
 import org.min.todo.entity.Todo;
 import org.min.todo.entity.User;
 
@@ -37,23 +35,23 @@ public interface TodoService {
     default Todo dtoToEntity(TodoDto dto) {
         return Todo.builder()
                 .tno(dto.getTno())
+                .user(User.builder().username(dto.getUsername()).build())
                 .title(dto.getTitle())
                 .done(dto.isDone())
                 .build();
     }
-    default TodoUserDto arrToDTO(Object[] arr) {
+    default TodoDto arrToDTO(Object[] arr) {
         Todo todo = (Todo) arr[0];
         User user = (User) arr[1];
-        UserDto userDto= UserDto
-                .builder()
+
+        return TodoDto.builder()
+                .tno(todo.getTno())
+                .title(todo.getTitle())
+                .done(todo.isDone())
                 .username(user.getUsername())
-                .createdDate(user.getCreateDate())
-                .updatedDate(user.getUpdatedDate())
+                .createdDate(todo.getCreateDate())
+                .updatedDate(todo.getUpdatedDate())
                 .build();
 
-        return TodoUserDto.builder()
-                .todoDto(entityToDTO(todo))
-                .userDto(userDto)
-                .build();
     }
 }

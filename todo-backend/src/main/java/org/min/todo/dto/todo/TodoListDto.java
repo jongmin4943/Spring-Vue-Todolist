@@ -13,6 +13,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TodoListDto {
-    private List<TodoUserDto> todoList;
+    private List<TodoDto> todoList;
     private PageInfo pageInfo;
 }

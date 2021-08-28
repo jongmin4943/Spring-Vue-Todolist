@@ -26,7 +26,7 @@ public class TodoRepositoryTests {
 
     @Test
     public void testInsert() {
-        IntStream.rangeClosed(2,100).forEach(i -> {
+        IntStream.rangeClosed(1,100).forEach(i -> {
             User user = User.builder()
                     .username("test"+i)
                     .build();

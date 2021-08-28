@@ -1,13 +1,12 @@
 package org.min.todo.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.min.todo.dto.*;
 import org.min.todo.dto.todo.TodoDto;
 import org.min.todo.dto.todo.TodoListDto;
-import org.min.todo.dto.todo.TodoUserDto;
 import org.min.todo.entity.Todo;
 import org.min.todo.repository.TodoRepository;
-import org.min.todo.service.TodoService;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +15,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class TodoServiceImpl implements TodoService {
 
     private final TodoRepository todoRepository;
@@ -37,7 +37,7 @@ public class TodoServiceImpl implements TodoService {
     @Override
     public TodoListDto getAllTodos(PageDto pageDto, String username) {
         Page<Object[]> result = todoRepository.getSearchedListWithUser(pageDto.getKeyword(),pageDto.getPageable(), username);
-        List<TodoUserDto> todoList = result.stream().map(arr->arrToDTO(arr)).collect(Collectors.toList());
+        List<TodoDto> todoList = result.stream().map(arr->arrToDTO(arr)).collect(Collectors.toList());
         PageInfo pageInfo = new PageInfo(pageDto.getPage(), pageDto.getSize(), (int) result.getTotalElements(), pageDto.getKeyword());
         return TodoListDto.builder().todoList(todoList).pageInfo(pageInfo).build();
     }

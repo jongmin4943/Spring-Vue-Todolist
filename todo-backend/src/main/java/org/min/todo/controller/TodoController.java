@@ -22,7 +22,8 @@ public class TodoController {
     private final TodoService todoService;
 
     @PostMapping("/")
-    public ResponseEntity<TodoDto> insertTodo(@RequestBody TodoDto dto) {
+    public ResponseEntity<TodoDto> insertTodo(@RequestBody TodoDto dto, @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        dto.setUsername(principalDetails.getUsername());
         return ResponseEntity.ok(todoService.register(dto));
     }
 

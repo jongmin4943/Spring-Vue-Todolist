@@ -3,7 +3,7 @@
     <div>
       <ul>
         <li>
-          <div class = 'todo_items'>
+          <div class="todo_items">
             <div class="no">
               번호
             </div>
@@ -21,28 +21,26 @@
             </div>
           </div>
         </li>
-        <li v-for="todo in todoList" :key="todo.tno" :class="todo.done? 'done':''">
-          <div class = 'todo_items' v-if="todoOnEdit.tno != todo.tno">
+        <li v-for="todo in todoList" :key="todo.tno" :class="todo.done ? 'done' : ''">
+          <div class="todo_items" v-if="todoOnEdit.tno != todo.tno">
             <div class="no">
-              {{todo.tno}}
+              {{ todo.tno }}
             </div>
             <div class="title">
-              {{todo.title}}
+              {{ todo.title }}
             </div>
-            <div class="date">
-            {{todo.createdDate.substr(0,10)}} {{todo.createdDate.substr(11,8)}}
-            </div>
+            <div class="date">{{ todo.createdDate.substr(0, 10) }} {{ todo.createdDate.substr(11, 8) }}</div>
             <div class="check">
-              <input type="checkbox" v-model="checkedTodos" :value="todo.tno">
+              <input type="checkbox" v-model="checkedTodos" :value="todo.tno" />
             </div>
             <div class="option">
-              <el-button :type="todo.done? 'info':'success'" icon="el-icon-check" circle :value="todo.done? '취소':'완료'" @click="completeTodo(todo.tno)"/>
-              <el-button type="primary" icon="el-icon-edit" circle disabled v-if="todo.done"/>
-              <el-button type="primary" icon="el-icon-edit" circle @click="startEditing(todo.tno)" v-else/>
+              <el-button :type="todo.done ? 'info' : 'success'" icon="el-icon-check" circle :value="todo.done ? '취소' : '완료'" @click="completeTodo(todo.tno)" />
+              <el-button type="primary" icon="el-icon-edit" circle disabled v-if="todo.done" />
+              <el-button type="primary" icon="el-icon-edit" circle @click="startEditing(todo.tno)" v-else />
             </div>
           </div>
           <div v-else>
-            <TodoEditInput/>
+            <TodoEditInput />
           </div>
         </li>
       </ul>
@@ -54,35 +52,35 @@
   </div>
 </template>
 <script>
-import {mapGetters, mapMutations} from 'vuex';
-import {mapActions} from 'vuex';
-import TodoEditInput from './TodoEditInput.vue'
-import {getPageKeywordQuery} from '../mixins/getPageKeywordQuery'
+import { mapGetters, mapMutations } from "vuex";
+import { mapActions } from "vuex";
+import TodoEditInput from "./TodoEditInput.vue";
+import { getPageKeywordQuery } from "../mixins/getPageKeywordQuery";
 
 export default {
-  components:{TodoEditInput},
-  data() { 
+  components: { TodoEditInput },
+  data() {
     return {
       checkedTodos: [],
-    }
+    };
   },
   computed: {
     ...mapGetters({
-      todoList: 'getTodoList',
-      todoOnEdit: 'getTodoOnEdit',
+      todoList: "getTodoList",
+      todoOnEdit: "getTodoOnEdit",
     }),
   },
   created() {
-    this.getTodos({page:this.currPage,keyword:this.keyword});
+    this.getTodos({ page: this.currPage, keyword: this.keyword });
   },
   methods: {
-    ...mapActions(['doneTodo','deleteTodos','getTodos']),
-    ...mapMutations(['startEdit']),
+    ...mapActions(["doneTodo", "deleteTodos", "getTodos"]),
+    ...mapMutations(["startEdit"]),
     completeTodo(tno) {
-      this.doneTodo(tno)
+      this.doneTodo(tno);
     },
     removeTodos() {
-      if(this.checkedTodos.length > 0) {
+      if (this.checkedTodos.length > 0) {
         this.deleteTodos(this.checkedTodos);
         this.checkedTodos = [];
       }
@@ -91,9 +89,9 @@ export default {
       this.startEdit(tno);
     },
     showAllTodos() {
-      this.$router.push({name: 'Todo', query: {page:1,keyword:''}});
-      this.getTodos({page:1,keyword:''})
-    }
+      this.$router.push({ name: "Todo", query: { page: 1, keyword: "" } });
+      this.getTodos({ page: 1, keyword: "" });
+    },
   },
   // watch: {
   //   $route(to) {
@@ -103,34 +101,34 @@ export default {
   //     });
   //   }
   // },
-  mixins: [getPageKeywordQuery]
-}
+  mixins: [getPageKeywordQuery],
+};
 </script>
 <style>
 .done {
   text-decoration: line-through;
   background-color: #dddddd;
 }
-.no{
+.no {
   width: 5vw;
 }
-.title{
+.title {
   width: 55vw;
 }
-.date{
+.date {
   width: 20vw;
 }
-.check{
+.check {
   width: 7vw;
 }
-.option{
+.option {
   width: 10vw;
 }
-.deleteBtn{
+.deleteBtn {
   display: flex;
   justify-content: flex-end;
 }
-ul{
+ul {
   list-style-type: none;
 }
 .todo_items {

@@ -7,14 +7,14 @@
     <el-col :span="8">
       <div class="grid-content">
         <el-form :model="form" ref="form" label-width="120px">
-          <el-form-item label="아이디" prop="id">
-            <el-input v-model="form.id"></el-input>
+          <el-form-item label="아이디" prop="username">
+            <el-input v-model="form.username"></el-input>
           </el-form-item>
           <el-form-item label="비밀번호" prop="password">
-            <el-input v-model="form.id"></el-input>
+            <el-input v-model="form.password" type="password"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary">로그인</el-button>
+            <el-button type="primary" @click="userLogIn">로그인</el-button>
             <el-button @click="goSignUp">회원가입</el-button>
           </el-form-item>
         </el-form>
@@ -27,18 +27,23 @@
   </el-row>
 </template>
 <script>
+import { mapActions } from "vuex";
 export default {
   data() {
     return {
       form: {
-        id: "",
+        username: "",
         password: "",
       },
     };
   },
   methods: {
+    ...mapActions(["logIn"]),
     goSignUp() {
       this.$router.push({ name: "SignUp" });
+    },
+    userLogIn() {
+      this.logIn(this.form);
     },
   },
 };
