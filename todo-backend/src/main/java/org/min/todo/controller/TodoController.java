@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.min.todo.dto.PageDto;
 import org.min.todo.dto.todo.TodoDto;
 import org.min.todo.dto.todo.TodoListDto;
-import org.min.todo.security.jwt.JwtTokenProvider;
 import org.min.todo.security.principal.PrincipalDetails;
 import org.min.todo.service.TodoService;
 import org.springframework.http.ResponseEntity;

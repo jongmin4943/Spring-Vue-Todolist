@@ -8,7 +8,9 @@ export const instance = axios.create({
 
 instance.interceptors.request.use(
   (config) => {
-    config.headers.Authorization = `Bearer ${JSON.parse(localStorage.getItem("accessToken")) || ""}`;
+    const userData = JSON.parse(localStorage.getItem("userData"));
+    localStorage.setItem("lastActiveTime", JSON.stringify(new Date()));
+    config.headers.Authorization = `Bearer ${userData?.accessToken || ""}`;
     return config;
   },
   (error) => {
@@ -20,6 +22,7 @@ instance.interceptors.response.use(
     return config;
   },
   (error) => {
+    console.log(error);
     Notification.error(error.response.data.error || "오류");
     return Promise.reject(error);
   }

@@ -40,7 +40,6 @@ const todoStore = {
     async getTodos({ state, commit }, payload) {
       state.pageInfo = { ...state.pageInfo, ...payload };
       const result = await todoService.fetchTodoList(state.pageInfo);
-      console.log(result.data);
       commit("refreshTodos", result.data);
     },
     async addTodo({ state, commit }, payload) {

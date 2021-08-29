@@ -40,7 +40,7 @@ export default {
   methods: {
     ...mapActions(["logIn"]),
     goSignUp() {
-      this.$router.push({ name: "SignUp" });
+      this.$router.push({ name: "SignUp", params: { signup: "signup" } });
     },
     userLogIn() {
       this.logIn(this.form);

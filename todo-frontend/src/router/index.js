@@ -12,7 +12,7 @@ export const router = new Router({
   mode: "history",
   routes: [
     {
-      path: "/",
+      path: "/todo",
       name: "Todo",
       beforeEnter: (to, from, next) => {
         const isUserLoggedIn = store.getters.isUserLoggedIn;
@@ -25,7 +25,7 @@ export const router = new Router({
       name: "User",
       beforeEnter: (to, from, next) => {
         const isUserLoggedIn = store.getters.isUserLoggedIn;
-        !isUserLoggedIn ? next() : next("/");
+        !isUserLoggedIn ? next() : next("/todo");
       },
       component: User,
       children: [

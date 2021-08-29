@@ -47,4 +47,9 @@ public class UserController {
         }
         throw new IllegalArgumentException("권한이 없습니다.");
     }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<TokenDto> refreshToken(@RequestBody TokenDto dto) {
+        return ResponseEntity.ok(userService.refreshToken(dto));
+    }
 }

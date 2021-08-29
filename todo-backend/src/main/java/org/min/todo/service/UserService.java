@@ -16,10 +16,13 @@ public interface UserService {
 
     TokenDto login(UserDto dto);
 
+    TokenDto refreshToken(TokenDto dto);
+
     default UserDto entityToDTO(User user) {
         return UserDto
                 .builder()
                 .username(user.getUsername())
+                .roleSet(user.getUserRoleSet())
                 .createdDate(user.getCreateDate())
                 .updatedDate(user.getUpdatedDate())
                 .build();
@@ -28,8 +31,11 @@ public interface UserService {
     default User dtoToEntity(UserDto dto) {
         return User.builder()
                 .username(dto.getUsername())
+                .password(dto.getPassword())
+                .userRoleSet(dto.getRoleSet())
                 .build();
     }
+
 
 
 }

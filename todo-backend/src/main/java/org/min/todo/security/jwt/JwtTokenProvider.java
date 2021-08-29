@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @Component
 @Log4j2
 public class JwtTokenProvider {
-    public final static long TOKEN_VALIDATION_SECOND = 1000L * 60 * 15;
+    public final static long TOKEN_VALIDATION_SECOND = 1000L * 60 * 20; //20분
 
     private final PrincipalDetailsService principalDetailsService;
 
@@ -33,8 +33,6 @@ public class JwtTokenProvider {
     // JWT 생성 파트
     public String doGenerateToken(String username,List<String> roles) {
 
-        // getPrincipal PrincipalDetails담겨있는 정보를 가져옴
-
         Date now = new Date();
         Date expired = new Date(now.getTime() + TOKEN_VALIDATION_SECOND);
 
@@ -42,9 +40,9 @@ public class JwtTokenProvider {
                 .claim("username",username)
                 .claim("roles",roles) //
                 .setIssuedAt(new Date())
-                .setExpiration(expired) // 위 세개 PAYLOAD
-                .signWith(SignatureAlgorithm.HS512, jwtSecret) // HEADER
-                .compact(); // 만듬
+                .setExpiration(expired)
+                .signWith(SignatureAlgorithm.HS512, jwtSecret)
+                .compact();
     }
 
     public boolean validateToken(String authToken) {
