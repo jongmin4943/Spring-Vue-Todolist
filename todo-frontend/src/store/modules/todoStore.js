@@ -34,6 +34,11 @@ const todoStore = {
     cancelEdit(state) {
       state.todoOnEdit = { tno: -1, title: "" };
     },
+    initPageInfo(state, paylaod) {
+      const page = paylaod.page || 1;
+      const keyword = paylaod.keyword ?? "";
+      state.pageInfo = { page, keyword };
+    },
   },
   actions: {
     // mutation 로직처리, 비동기 처리

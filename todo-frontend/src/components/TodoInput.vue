@@ -1,6 +1,6 @@
 <template>
   <div class="add_input">
-    <textarea v-model="todoInput" placeholder="할 일 ..." @keyup.enter="insertTodo" class="input" />
+    <textarea v-model="todoInput" placeholder="할 일 ..." @keyup.enter="insertTodo" class="input" maxlength="250" />
     <el-button type="primary" icon="el-icon-edit" @click="insertTodo" />
   </div>
 </template>

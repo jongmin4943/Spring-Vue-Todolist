@@ -59,15 +59,17 @@ export default {
     goLogin() {
       this.$router.push({ path: "/user/login" });
     },
-    userSignUp() {
-      if (this.ruleForm.username.trim() && this.ruleForm.password && this.ruleForm.passwordCheck) {
-        userService.signUp(this.ruleForm);
-        this.$message({
-          showClose: true,
-          message: "회원가입 되었습니다",
-          type: "success",
-        });
-        this.$router.push({ path: "/user/login" });
+    async userSignUp() {
+      if (this.ruleForm.username.trim() && this.ruleForm.password && this.ruleForm.password !== this.ruleForm.passwordCheck) {
+        const result = await userService.signUp(this.ruleForm);
+        if (result) {
+          this.$message({
+            showClose: true,
+            message: "회원가입 되었습니다",
+            type: "success",
+          });
+          this.$router.push({ path: "/user/login" });
+        }
       } else {
         this.$message({
           showClose: true,

@@ -10,9 +10,9 @@ export default {
   name: "App",
   methods: {
     ...mapActions(["silenceRefresh", "startRefresh"]),
-    ...mapMutations(["userLogOut"]),
+    ...mapMutations(["userLogOut", "initPageInfo"]),
     checkLocalStorage() {
-      const lastActiveTime = JSON.parse(localStorage.getItem("lastActiveTime") || "");
+      const lastActiveTime = JSON.parse(localStorage.getItem("lastActiveTime") || null);
       if (lastActiveTime) {
         const minute = Math.abs(new Date() - new Date(lastActiveTime)) / (1000 * 60);
         if (minute > 15) {

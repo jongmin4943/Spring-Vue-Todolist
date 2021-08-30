@@ -23,7 +23,8 @@ const userStore = {
       localStorage.setItem("lastActiveTime", JSON.stringify(new Date()));
       state.isUserLoggedIn = true;
       state.userData.username = payload.username;
-      router.history.current.name !== "Todo" && router.push({ name: "Todo" });
+      const pageInfo = state.todoStore.pageInfo;
+      router.history.current.name !== "Todo" && router.push({ name: "Todo", query: { page: pageInfo.page, keyword: pageInfo.keyword } });
     },
     userLogOut(state) {
       state.userData = { username: "" };

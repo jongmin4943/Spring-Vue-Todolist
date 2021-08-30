@@ -15,6 +15,7 @@ export const router = new Router({
       path: "/todo",
       name: "Todo",
       beforeEnter: (to, from, next) => {
+        store.commit("initPageInfo", to.query);
         const isUserLoggedIn = store.getters.isUserLoggedIn;
         isUserLoggedIn ? next() : next("/user/login");
       },
@@ -25,7 +26,8 @@ export const router = new Router({
       name: "User",
       beforeEnter: (to, from, next) => {
         const isUserLoggedIn = store.getters.isUserLoggedIn;
-        !isUserLoggedIn ? next() : next("/todo");
+        const pageInfo = store.getters.getPageInfo;
+        !isUserLoggedIn ? next() : next(`/todo?page=${pageInfo.page}&keyword=${pageInfo.keyword}`);
       },
       component: User,
       children: [
