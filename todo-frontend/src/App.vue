@@ -21,10 +21,12 @@ export default {
         } else {
           const userData = JSON.parse(localStorage.getItem("userData"));
           if (userData) {
-            this.silenceRefresh(userData);
+            this.silenceRefresh();
             this.startRefresh();
           }
         }
+      } else {
+        this.userLogOut();
       }
     },
   },

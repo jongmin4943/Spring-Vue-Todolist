@@ -12,6 +12,18 @@ import java.io.OutputStream;
 
 public class JwtAccessDeniedHandler implements AccessDeniedHandler {
 
+
+    /**
+     * @Method Name : handle
+     * @작성일 : 2021. 08. 30.
+     * @작성자 : J.M YOON
+     * @변경이력 :
+     * @Method 설명 : AccessDeny 가 되면 응답에 403에러와 함께 권한이 없다는걸 json 형태로 반환한다.
+     * @param request
+     * @param response
+     * @param accessDeniedException
+     * @throws IOException
+     */
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException {
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);

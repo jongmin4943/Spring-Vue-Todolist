@@ -17,11 +17,11 @@ spring:
   application:
     name: todo
 
-logging:
-  level:
-    org:
-      springframework:
-        security: trace
+#logging:
+#  level:
+#    org:
+#      springframework:
+#        security: trace
 
 app:
   jwt:

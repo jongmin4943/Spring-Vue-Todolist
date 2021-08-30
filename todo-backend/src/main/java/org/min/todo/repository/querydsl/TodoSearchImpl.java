@@ -1,13 +1,11 @@
 package org.min.todo.repository.querydsl;
 
-import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;
 import com.querydsl.jpa.JPQLQuery;
 import lombok.extern.log4j.Log4j2;
 import org.min.todo.entity.QTodo;
 import org.min.todo.entity.QUser;
 import org.min.todo.entity.Todo;
-import org.min.todo.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -47,6 +45,7 @@ public class TodoSearchImpl extends QuerydslRepositorySupport implements TodoSea
                 pageable,
                 count);
     }
+
 
     @Override
     public Page<Object[]> getSearchedListWithUser(String keyword, Pageable pageable, String username) {

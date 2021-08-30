@@ -45,7 +45,6 @@ const userStore = {
       commit("userLogIn", result.data);
     },
     startRefresh({ dispatch }) {
-      dispatch("silenceRefresh");
       refreshToken = setInterval(() => dispatch("silenceRefresh"), refreshTime);
     },
   },

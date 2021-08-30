@@ -26,11 +26,19 @@ public class JwtTokenProvider {
         this.principalDetailsService = principalDetailsService;
     }
 
-    // apc.yml에 설정함
     @Value("${app.jwt.secret}")
     private String jwtSecret;
 
-    // JWT 생성 파트
+    /**
+     * @Method Name : doGenerateToken
+     * @작성일 : 2021. 08. 30.
+     * @작성자 : J.M YOON
+     * @변경이력 :
+     * @Method 설명 : access 토큰을 생성한다.
+     * @param username
+     * @param roles
+     * @return
+     */
     public String doGenerateToken(String username,List<String> roles) {
 
         Date now = new Date();
@@ -45,6 +53,15 @@ public class JwtTokenProvider {
                 .compact();
     }
 
+    /**
+     * @Method Name : validateToken
+     * @작성일 : 2021. 08. 30.
+     * @작성자 : J.M YOON
+     * @변경이력 :
+     * @Method 설명 : Token이 정상적인지 확인한다.
+     * @param authToken
+     * @return boolean
+     */
     public boolean validateToken(String authToken) {
         try {
             Jwts.parser()
@@ -65,6 +82,15 @@ public class JwtTokenProvider {
         return false;
     }
 
+    /**
+     * @Method Name : extractAllClaims
+     * @작성일 : 2021. 08. 30.
+     * @작성자 : J.M YOON
+     * @변경이력 :
+     * @Method 설명 : 토큰의 body 부분을 추출한다.
+     * @param token
+     * @return
+     */
     public Claims extractAllClaims(String token) {
         return Jwts
                 .parser()
@@ -73,6 +99,15 @@ public class JwtTokenProvider {
                 .getBody();
     }
 
+    /**
+     * @Method Name : getAuthentication
+     * @작성일 : 2021. 08. 30.
+     * @작성자 : J.M YOON
+     * @변경이력 :
+     * @Method 설명 : 토큰을 이용해 UsernamePasswordAuthenticationToken객체를 생성한다.
+     * @param accessToken
+     * @return UsernamePasswordAuthenticationToken
+     */
     public UsernamePasswordAuthenticationToken getAuthentication(String accessToken) {
         Claims claims = extractAllClaims(accessToken);
         String username = claims.get("username",String.class);

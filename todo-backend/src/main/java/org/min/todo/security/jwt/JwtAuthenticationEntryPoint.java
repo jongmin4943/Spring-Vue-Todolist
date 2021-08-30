@@ -11,6 +11,18 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
+
+    /**
+     * @Method Name : commence
+     * @작성일 : 2021. 08. 30.
+     * @작성자 : J.M YOON
+     * @변경이력 :
+     * @Method 설명 : jwt가 없으면 401에러와 함께 로그인 해주세요 라는 메세지를 담아 반환한다.
+     * @param request
+     * @param response
+     * @param authException
+     * @throws IOException
+     */
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
                          AuthenticationException authException) throws IOException {
