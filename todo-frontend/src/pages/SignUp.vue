@@ -8,13 +8,13 @@
       <div class="grid-content bg-purple-light">
         <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="120px">
           <el-form-item label="아이디" prop="username">
-            <el-input v-model="ruleForm.username"></el-input>
+            <el-input v-model="ruleForm.username" @keyup.enter="userSignUp"></el-input>
           </el-form-item>
           <el-form-item label="비밀번호" prop="password">
-            <el-input v-model="ruleForm.password" type="password"></el-input>
+            <el-input v-model="ruleForm.password" type="password" @keyup.enter="userSignUp"></el-input>
           </el-form-item>
           <el-form-item label="비밀번호 확인" prop="passwordCheck">
-            <el-input v-model="ruleForm.passwordCheck" type="password"></el-input>
+            <el-input v-model="ruleForm.passwordCheck" type="password" @keyup.enter="userSignUp"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="userSignUp">회원가입</el-button>

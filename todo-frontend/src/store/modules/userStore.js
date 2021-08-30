@@ -36,13 +36,15 @@ const userStore = {
   actions: {
     async logIn({ commit, dispatch }, payload) {
       const result = await userService.logIn(payload);
-      refreshToken = setInterval(() => dispatch("silenceRefresh"), refreshTime);
+      dispatch("startRefresh");
       commit("userLogIn", result.data);
     },
     async silenceRefresh({ commit }) {
       const userData = JSON.parse(localStorage.getItem("userData"));
-      const result = await userService.refreshToken(userData);
-      commit("userLogIn", result.data);
+      if (userData) {
+        const result = await userService.refreshToken(userData);
+        commit("userLogIn", result.data);
+      }
     },
     startRefresh({ dispatch }) {
       refreshToken = setInterval(() => dispatch("silenceRefresh"), refreshTime);

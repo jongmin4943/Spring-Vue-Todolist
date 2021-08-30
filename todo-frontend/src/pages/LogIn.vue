@@ -8,10 +8,10 @@
       <div class="grid-content">
         <el-form :model="form" ref="form" label-width="120px">
           <el-form-item label="아이디" prop="username">
-            <el-input v-model="form.username"></el-input>
+            <el-input v-model="form.username" @keyup.enter="userLogIn"></el-input>
           </el-form-item>
           <el-form-item label="비밀번호" prop="password">
-            <el-input v-model="form.password" type="password"></el-input>
+            <el-input v-model="form.password" type="password" @keyup.enter="userLogIn"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="userLogIn">로그인</el-button>
