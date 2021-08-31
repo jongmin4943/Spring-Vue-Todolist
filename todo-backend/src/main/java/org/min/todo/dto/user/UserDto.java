@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.min.todo.entity.UserRole;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -22,7 +21,7 @@ public class UserDto {
     @Builder.Default
     private Set<UserRole> roleSet = new HashSet<>();
 
-    private LocalDateTime createdDate;
+    private LocalDateTime createDate;
 
     private LocalDateTime updatedDate;
 

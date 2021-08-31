@@ -18,8 +18,10 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<UserDto> insertUser(@RequestBody UserDto dto) {
-        return ResponseEntity.ok(userService.register(dto));
+    public ResponseEntity insertUser(@RequestBody UserDto dto) {
+        userService.register(dto);
+
+        return ResponseEntity.ok("Success");
     }
 
     @PostMapping("/login")
@@ -38,8 +40,9 @@ public class UserController {
      * @return 변경된 유저 정보
      */
     @PutMapping("/update")
-    public ResponseEntity<UserDto> updateUser(@RequestBody UserDto dto,@AuthenticationPrincipal PrincipalDetails principalDetails) {
-        if(principalDetails.getUsername().equals(dto.getUsername())) return ResponseEntity.ok(userService.modify(dto));
+    public ResponseEntity updateUser(@RequestBody UserDto dto,@AuthenticationPrincipal PrincipalDetails principalDetails) {
+        userService.modify(dto);
+        if(principalDetails.getUsername().equals(dto.getUsername())) return ResponseEntity.ok(null);
         throw new IllegalArgumentException("권한이 없습니다.");
     }
 

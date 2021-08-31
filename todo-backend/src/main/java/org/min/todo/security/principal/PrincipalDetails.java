@@ -1,7 +1,7 @@
 package org.min.todo.security.principal;
 
 import lombok.Getter;
-import org.min.todo.entity.User;
+import org.min.todo.dto.user.UserDto;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,9 +19,9 @@ public class PrincipalDetails implements UserDetails {
 
     private Collection<? extends GrantedAuthority> authority;
 
-    public PrincipalDetails(User user) {
+    public PrincipalDetails(UserDto user) {
         List<GrantedAuthority> authority =
-                user.getUserRoleSet()
+                user.getRoleSet()
                         .stream()
                         .map((role)->new SimpleGrantedAuthority("ROLE_"+role))
                         .collect(Collectors.toList());

@@ -4,9 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.min.todo.dto.user.TokenDto;
 import org.min.todo.dto.user.UserDto;
-import org.min.todo.entity.User;
-import org.min.todo.entity.UserRole;
-import org.min.todo.repository.UserRepository;
+import org.min.todo.repository.UserMapper;
 import org.min.todo.security.jwt.JwtTokenProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,26 +18,26 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository userRepository;
+    private final UserMapper userMapper;
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder encoder;
 
     @Override
-    public UserDto register(UserDto dto) {
-        boolean result = userRepository.findById(dto.getUsername()).isPresent();
-        if(result) throw new IllegalArgumentException("이미 존재하는 아이디 입니다.");
+    public void register(UserDto dto) {
+        UserDto user = userMapper.findByUsername(dto.getUsername());
+        if(user != null) throw new IllegalArgumentException("이미 존재하는 아이디 입니다.");
         dto.setPassword(encoder.encode(dto.getPassword()));
-        dto.addRole(UserRole.USER);
-        User user = userRepository.save(dtoToEntity(dto));
-        return entityToDTO(user);
+        int result = userMapper.save(dto);
+        if(result <= 0) throw new IllegalArgumentException("가입을 실패 했습니다.");
     }
 
     @Override
     public TokenDto login(UserDto dto) {
-        User user = userRepository.findById(dto.getUsername()).orElseThrow(()->new IllegalArgumentException(dto.getUsername() + "은 존재하지 않는 유저입니다."));
+        UserDto user = userMapper.findByUsername(dto.getUsername());
+        if(user == null) throw new IllegalArgumentException(dto.getUsername() + "은 존재하지 않는 유저입니다.");
         boolean isPasswordCorrect = encoder.matches(dto.getPassword(),user.getPassword());
         if(isPasswordCorrect) {
-            List<String> roles = user.getUserRoleSet().stream().map(role->role.name()).collect(Collectors.toList());
+            List<String> roles = user.getRoleSet().stream().map(role->role.name()).collect(Collectors.toList());
             String accessToken = jwtTokenProvider.doGenerateToken(user.getUsername(),roles);
             return TokenDto.builder()
                     .accessToken(accessToken)
@@ -52,8 +50,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public TokenDto refreshToken(TokenDto dto) {
         if(jwtTokenProvider.validateToken(dto.getAccessToken())){
-            User user = userRepository.findById(dto.getUsername()).orElseThrow(()->new IllegalArgumentException(dto.getUsername() + "은 존재하지 않는 유저입니다."));
-            List<String> roles = user.getUserRoleSet().stream().map(role->role.name()).collect(Collectors.toList());
+            UserDto user = userMapper.findByUsername(dto.getUsername());
+            if(user == null) throw new IllegalArgumentException(dto.getUsername() + "은 존재하지 않는 유저입니다.");
+            List<String> roles = user.getRoleSet().stream().map(role->role.name()).collect(Collectors.toList());
             String accessToken = jwtTokenProvider.doGenerateToken(user.getUsername(),roles);
             return TokenDto.builder()
                     .accessToken(accessToken)
@@ -64,23 +63,25 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto modify(UserDto dto) {
-        User oldUser = userRepository.findById(dto.getUsername()).orElseThrow(()->new IllegalArgumentException(dto.getUsername() + "은 존재하지 않는 유저입니다."));
-        oldUser.changePassword(encoder.encode(dto.getPassword()));
-        User newUser = userRepository.save(oldUser);
-        return entityToDTO(newUser);
+    public void modify(UserDto dto) {
+//        UserDto user = userMapper.findByUsername(dto.getUsername());
+//        if(user == null) throw new IllegalArgumentException(dto.getUsername() + "은 존재하지 않는 유저입니다.");
+        dto.setPassword(encoder.encode(dto.getPassword()));
+        int result = userMapper.modify(dto);
+        if(result <= 0) throw new IllegalArgumentException("수정을 실패 했습니다..");
     }
 
     @Override
     public UserDto getUser(String username) {
-        User user = userRepository.findById(username).orElseThrow(()->new IllegalArgumentException(username + "은 존재하지 않는 유저입니다."));
-        return entityToDTO(user);
+        UserDto user = userMapper.findByUsername(username);
+        if(user == null) throw new IllegalArgumentException(username + "는 존재하지 않는 유저 입니다.");
+        return user;
     }
 
     @Override
     public String remove(String username) {
-        userRepository.deleteById(username);
-        return "Success";
+        int result = userMapper.deleteById(username);
+        return result > 0 ? "Success" : "Fail";
     }
 
 

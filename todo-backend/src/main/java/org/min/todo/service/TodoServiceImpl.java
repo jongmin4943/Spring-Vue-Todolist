@@ -5,9 +5,7 @@ import lombok.extern.log4j.Log4j2;
 import org.min.todo.dto.*;
 import org.min.todo.dto.todo.TodoDto;
 import org.min.todo.dto.todo.TodoListDto;
-import org.min.todo.entity.Todo;
-import org.min.todo.repository.TodoRepository;
-import org.springframework.data.domain.Page;
+import org.min.todo.repository.TodoMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,49 +16,41 @@ import java.util.stream.Collectors;
 @Log4j2
 public class TodoServiceImpl implements TodoService {
 
-    private final TodoRepository todoRepository;
+    private final TodoMapper todoMapper;
 
     @Override
-    public TodoDto register(TodoDto dto) {
-        Todo newTodo = todoRepository.save(dtoToEntity(dto));
-        return entityToDTO(newTodo);
+    public void register(TodoDto dto) {
+        int result = todoMapper.save(dto);
+        if(result <= 0) throw new IllegalArgumentException("작성에 실패 했습니다.");
     }
 
     @Override
-    public TodoDto modify(TodoDto dto) {
-        Todo oldTodo = todoRepository.findById(dto.getTno()).orElseThrow(()->new IllegalArgumentException("존재하지 않는 Todo입니다."));
-        oldTodo.modify(dto);
-        Todo newTodo = todoRepository.save(oldTodo);
-        return entityToDTO(newTodo);
+    public void modify(TodoDto dto) {
+//        TodoDto todo = todoMapper.findById(dto.getTno());
+//        if(todo == null) new IllegalArgumentException("존재하지 않는 Todo입니다.");
+        int result = todoMapper.modify(dto);
+        if(result <= 0) throw new IllegalArgumentException("수정에 실패 했습니다.");
     }
 
     @Override
     public TodoListDto getAllTodos(PageDto pageDto, String username) {
-        Page<Object[]> result = todoRepository.getSearchedListWithUser(pageDto.getKeyword(),pageDto.getPageable(), username);
-        List<TodoDto> todoList = result.stream().map(arr->arrToDTO(arr)).collect(Collectors.toList());
-        PageInfo pageInfo = new PageInfo(pageDto.getPage(), pageDto.getSize(), (int) result.getTotalElements(), pageDto.getKeyword());
-        return TodoListDto.builder().todoList(todoList).pageInfo(pageInfo).build();
+        List<TodoDto> result = todoMapper.getSearchedListWithUser(pageDto.getKeyword(),pageDto.getPage(),pageDto.getSize(), username);
+        long totalCount = todoMapper.countAll(pageDto.getKeyword(),username);
+        PageInfo pageInfo = new PageInfo(pageDto.getPage(), pageDto.getSize(), (int) totalCount, pageDto.getKeyword());
+        return TodoListDto.builder().todoList(result).pageInfo(pageInfo).build();
     }
 
     @Override
     public TodoDto getTodo(Long tno) {
-        Todo todo = todoRepository.findById(tno).orElseThrow(()->new IllegalArgumentException("존재하지 않는 Todo입니다."));
-        return entityToDTO(todo);
+        TodoDto todo = todoMapper.findById(tno);
+        if(todo == null) throw new IllegalArgumentException("존재하지 않는 todo 입니다.");
+        return todo;
     }
 
     @Override
     public String remove(List<Long> tnos) {
-        tnos.forEach(tno -> {
-            todoRepository.deleteById(tno);
-        });
-        return "Success";
+        int result = todoMapper.delete(tnos);
+        return result > 0 ? "Success" : "Fail";
     }
 
-    @Override
-    public TodoDto complete(Long tno) {
-        Todo oldTodo = todoRepository.findById(tno).orElseThrow(()->new IllegalArgumentException("존재하지 않는 Todo입니다."));
-        oldTodo.done();
-        Todo newTodo = todoRepository.save(oldTodo);
-        return entityToDTO(newTodo);
-    }
 }
