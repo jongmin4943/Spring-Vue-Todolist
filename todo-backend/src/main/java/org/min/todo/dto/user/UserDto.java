@@ -6,8 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Builder
@@ -19,13 +19,10 @@ public class UserDto {
     private String password;
 
     @Builder.Default
-    private Set<UserRole> roleSet = new HashSet<>();
+    private List<UserRole> roles = new ArrayList<>();
 
-    private LocalDateTime createDate;
+    private LocalDateTime createdDate;
 
     private LocalDateTime updatedDate;
 
-    public void addRole(UserRole role) {
-        roleSet.add(role);
-    }
 }

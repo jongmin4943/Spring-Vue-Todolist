@@ -34,7 +34,7 @@ public class TodoServiceImpl implements TodoService {
 
     @Override
     public TodoListDto getAllTodos(PageDto pageDto, String username) {
-        List<TodoDto> result = todoMapper.getSearchedListWithUser(pageDto.getKeyword(),pageDto.getPage(),pageDto.getSize(), username);
+        List<TodoDto> result = todoMapper.getSearchedListWithUser(pageDto, username);
         long totalCount = todoMapper.countAll(pageDto.getKeyword(),username);
         PageInfo pageInfo = new PageInfo(pageDto.getPage(), pageDto.getSize(), (int) totalCount, pageDto.getKeyword());
         return TodoListDto.builder().todoList(result).pageInfo(pageInfo).build();

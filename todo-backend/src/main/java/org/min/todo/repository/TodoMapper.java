@@ -1,6 +1,8 @@
 package org.min.todo.repository;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.min.todo.dto.PageDto;
 import org.min.todo.dto.todo.TodoDto;
 import org.springframework.stereotype.Repository;
 
@@ -13,9 +15,9 @@ public interface TodoMapper {
 
     int modify(TodoDto dto);
 
-    List<TodoDto> getSearchedListWithUser(String keyword, int page, int size, String username);
+    List<TodoDto> getSearchedListWithUser(@Param("pageDto") PageDto pageDto, @Param("username") String username);
 
-    long countAll(String keyword, String username);
+    long countAll(@Param("keyword") String keyword, @Param("username") String username);
 
     TodoDto findById(Long tno);
 

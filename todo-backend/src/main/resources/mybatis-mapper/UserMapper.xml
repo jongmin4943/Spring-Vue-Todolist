@@ -4,11 +4,39 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.min.todo.repository.UserMapper">
-    <select id="findByUsername" resultType="UserDto">
-        SELECT * FROM user WHERE username = #{username}
+
+    <resultMap id="userMap" type="UserDto">
+        <id property="username" column="username"/>
+        <result property="password" column="password"/>
+        <result property="createdDate" column="created_date"/>
+        <result property="updatedDate" column="updated_date"/>
+        <collection property="roles" resultMap="roleMap"/>
+    </resultMap>
+
+    <resultMap id="roleMap" type="UserRole">
+        <result property="username" column="username"/>
+        <result property="role" column="role"/>
+    </resultMap>
+
+
+    <select id="findByUsername" resultMap="userMap">
+        SELECT u.username,
+               password,
+               created_date,
+               updated_date,
+               role
+        FROM user u
+        left outer join user_role role
+        on u.username = role.username
+        WHERE u.username = #{username}
     </select>
 
     <insert id="save" parameterType="UserDto">
-        INSERT INTO user (username, password, create_date, updated_date) values (#{username}, #{password}, now(), now())
+        INSERT INTO user (username, password, created_date, updated_date) values (#{username}, #{password}, now(), now())
     </insert>
+
+    <insert id="setRole" parameterType="UserRole">
+        INSERT INTO user_role (username, role) values (#{username}, #{role})
+    </insert>
+
 </mapper>

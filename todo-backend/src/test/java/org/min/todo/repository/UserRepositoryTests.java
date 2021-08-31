@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.stream.IntStream;
+
 
 @SpringBootTest
 @Log4j2
@@ -27,7 +29,12 @@ public class UserRepositoryTests {
 
     @Test
     public void testSave() {
-        userService.register(UserDto.builder().username("test Insert").password(encoder.encode("1111")).build());
+
+        IntStream.rangeClosed(1,100).forEach(i->{
+            userService.register(UserDto.builder().username("test"+i).password(encoder.encode("1111")).build());
+        });
+
+//        userService.register(UserDto.builder().username("test1").password(encoder.encode("1111")).build());
     }
 
 

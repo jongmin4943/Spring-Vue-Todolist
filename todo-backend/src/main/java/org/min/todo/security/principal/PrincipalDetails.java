@@ -21,7 +21,7 @@ public class PrincipalDetails implements UserDetails {
 
     public PrincipalDetails(UserDto user) {
         List<GrantedAuthority> authority =
-                user.getRoleSet()
+                user.getRoles()
                         .stream()
                         .map((role)->new SimpleGrantedAuthority("ROLE_"+role))
                         .collect(Collectors.toList());
