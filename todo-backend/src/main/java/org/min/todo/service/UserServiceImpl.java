@@ -10,9 +10,7 @@ import org.min.todo.security.jwt.JwtTokenProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
+import org.springframework.transaction.annotation.Transactional;
 
 @Log4j2
 @Service
@@ -24,13 +22,15 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder encoder;
 
     @Override
+    @Transactional
     public void register(UserDto dto) {
         UserDto user = userMapper.findByUsername(dto.getUsername());
         if(user != null) throw new IllegalArgumentException("이미 존재하는 아이디 입니다.");
         dto.setPassword(encoder.encode(dto.getPassword()));
         int result = userMapper.save(dto);
+        if(result <= 0) throw new IllegalArgumentException("등록에 실패 했습니다.");
         int roleResult = userMapper.setRole(UserRole.builder().username(dto.getUsername()).role("USER").build());
-        if(result <= 0 && roleResult <= 0) throw new IllegalArgumentException("가입을 실패 했습니다.");
+        if(roleResult <= 0) throw new IllegalArgumentException("권한 부여에 실패 했습니다.");
     }
 
     @Override
@@ -39,12 +39,7 @@ public class UserServiceImpl implements UserService {
         if(user == null) throw new IllegalArgumentException(dto.getUsername() + "은 존재하지 않는 유저입니다.");
         boolean isPasswordCorrect = encoder.matches(dto.getPassword(),user.getPassword());
         if(isPasswordCorrect) {
-            List<String> roles = user.getRoles().stream().map(role->role.getRole()).collect(Collectors.toList());
-            String accessToken = jwtTokenProvider.doGenerateToken(user.getUsername(),roles);
-            return TokenDto.builder()
-                    .accessToken(accessToken)
-                    .username(dto.getUsername())
-                    .build();
+           return generateTokenDto(user,jwtTokenProvider);
         }
         throw new BadCredentialsException("비밀번호가 틀렸습니다.");
     }
@@ -54,23 +49,16 @@ public class UserServiceImpl implements UserService {
         if(jwtTokenProvider.validateToken(dto.getAccessToken())){
             UserDto user = userMapper.findByUsername(dto.getUsername());
             if(user == null) throw new IllegalArgumentException(dto.getUsername() + "은 존재하지 않는 유저입니다.");
-            List<String> roles = user.getRoles().stream().map(role->role.getRole()).collect(Collectors.toList());
-            String accessToken = jwtTokenProvider.doGenerateToken(user.getUsername(),roles);
-            return TokenDto.builder()
-                    .accessToken(accessToken)
-                    .username(dto.getUsername())
-                    .build();
+            return generateTokenDto(user,jwtTokenProvider);
         };
         throw new IllegalArgumentException("잘못된 요청입니다.");
     }
 
     @Override
     public void modify(UserDto dto) {
-//        UserDto user = userMapper.findByUsername(dto.getUsername());
-//        if(user == null) throw new IllegalArgumentException(dto.getUsername() + "은 존재하지 않는 유저입니다.");
         dto.setPassword(encoder.encode(dto.getPassword()));
         int result = userMapper.modify(dto);
-        if(result <= 0) throw new IllegalArgumentException("수정을 실패 했습니다..");
+        if(result <= 0) throw new IllegalArgumentException("수정을 실패 했습니다.");
     }
 
     @Override
@@ -81,11 +69,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public String remove(String username) {
         int roleResult = userMapper.deleteRole(username);
-        if(roleResult <= 0) throw new IllegalArgumentException("삭제를 실패 했습니다..");
+        if(roleResult <= 0) throw new IllegalArgumentException("권한 제거를 실패 했습니다.");
         int result = userMapper.deleteById(username);
-        return result > 0 ? "Success" : "Fail";
+        if(result <= 0) throw new IllegalArgumentException("유저 삭제를 실패 했습니다.");
+        return "Success";
     }
 
 

@@ -7,6 +7,7 @@ import org.min.todo.dto.todo.TodoDto;
 import org.min.todo.dto.todo.TodoListDto;
 import org.min.todo.repository.TodoMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,8 +27,6 @@ public class TodoServiceImpl implements TodoService {
 
     @Override
     public void modify(TodoDto dto) {
-//        TodoDto todo = todoMapper.findById(dto.getTno());
-//        if(todo == null) new IllegalArgumentException("존재하지 않는 Todo입니다.");
         int result = todoMapper.modify(dto);
         if(result <= 0) throw new IllegalArgumentException("수정에 실패 했습니다.");
     }
@@ -39,6 +38,7 @@ public class TodoServiceImpl implements TodoService {
     }
 
     @Override
+    @Transactional
     public TodoListDto getAllTodos(PageDto pageDto, String username) {
         List<TodoDto> result = todoMapper.getSearchedListWithUser(pageDto, username);
         long totalCount = todoMapper.countAll(pageDto,username);
