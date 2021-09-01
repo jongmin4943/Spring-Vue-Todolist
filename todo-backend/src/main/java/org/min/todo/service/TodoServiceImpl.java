@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -56,7 +55,8 @@ public class TodoServiceImpl implements TodoService {
     @Override
     public String remove(List<Long> tnos) {
         int result = todoMapper.delete(tnos);
-        return result > 0 ? "Success" : "Fail";
+        if(result <= 0) throw new IllegalArgumentException("삭제에 실패 했습니다.");
+        return "Success";
     }
 
 }

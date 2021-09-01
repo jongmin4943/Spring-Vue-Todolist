@@ -18,7 +18,6 @@
         <result property="role" column="role"/>
     </resultMap>
 
-
     <select id="findByUsername" resultMap="userMap">
         SELECT u.username,
                password,

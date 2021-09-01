@@ -44,7 +44,7 @@ public class TodoRepositoryTests {
 
     @Test
     public void testGetAllTodos(){
-        PageDto dto = PageDto.builder().page(1).size(10).keyword("1").build();
+        PageDto dto = PageDto.builder().page(2).size(10).keyword("1").build();
         TodoListDto result = todoService.getAllTodos(dto,"test2");
         result.getTodoList().forEach(todo->{
             log.info(todo);
