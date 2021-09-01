@@ -15,12 +15,12 @@ axios <br>
 
 ## Back-End - Spring Boot
 Spring Web <br>
-Spring Data JPA <br>
+Spring JDBC <br>
+MyBatis <br>
 Mariadb <br>
 Lombok <br>
 Spring Security <br>
 Jwt <br>
-Querydsl
 
 ## DataBase - MaridDB
 Docker 이용
