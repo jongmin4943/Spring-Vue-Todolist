@@ -5,4 +5,52 @@
 
 <mapper namespace="org.min.todo.repository.TodoMapper">
 
+    <sql id="search">
+        <if test="pageDto.keyword != null and pageDto.keyword != ''">
+            AND (title like concat('%',${pageDto.keyword},'%'))
+        </if>
+    </sql>
+
+    <insert id="save" parameterType="TodoDto">
+        Insert into todo (title,username,done,created_date,updated_date) values (#{title},#{username},false,now(),now());
+    </insert>
+
+    <update id="modify" parameterType="TodoDto">
+        Update todo set title=#{title},updated_date=now() where tno=#{tno}
+    </update>
+
+    <update id="done" parameterType="long">
+        Update todo set done=!done,updated_date=now() where tno=#{tno}
+    </update>
+
+    <delete id="delete" parameterType="List">
+        delete from todo
+        where tno in
+        <foreach collection="list" item="tno" separator="," open="(" close=")">
+            #{tno}
+        </foreach>
+    </delete>
+
+    <select id="findById" resultType="TodoDto">
+        select tno,title,username,done,created_date,updated_date
+        from todo
+        where tno = #{tno}
+    </select>
+
+    <select id="getSearchedListWithUser" resultType="TodoDto">
+        select tno,title,username,done,created_date,updated_date
+        from todo
+        where username = #{username}
+        <include refid="search"/>
+        order by tno desc
+        limit #{pageDto.skip} , #{pageDto.size}
+    </select>
+
+    <select id="countAll" resultType="long">
+        select count(tno)
+        from todo
+        where username = #{username}
+        <include refid="search"/>
+    </select>
+
 </mapper>

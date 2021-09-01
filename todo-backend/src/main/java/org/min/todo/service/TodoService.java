@@ -12,10 +12,13 @@ public interface TodoService {
 
     void modify(TodoDto dto);
 
+    void complete(Long tno);
+
     TodoListDto getAllTodos(PageDto pageDto, String username);
 
     TodoDto getTodo(Long tno);
 
     String remove(List<Long> tnos);
+
 
 }

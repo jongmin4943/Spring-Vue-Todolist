@@ -33,6 +33,12 @@ public class TodoController {
         return ResponseEntity.ok(null);
     }
 
+    @PutMapping("/{tno}")
+    public ResponseEntity<TodoDto> completeTodo(@PathVariable Long tno) {
+        todoService.complete(tno);
+        return ResponseEntity.ok(null);
+    }
+
     @GetMapping("/")
     public ResponseEntity<TodoListDto> getTodos(PageDto pageDto, @AuthenticationPrincipal PrincipalDetails principalDetails) {
         return ResponseEntity.ok(todoService.getAllTodos(pageDto, principalDetails.getUsername()));

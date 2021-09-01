@@ -39,4 +39,16 @@
         INSERT INTO user_role (username, role) values (#{username}, #{role})
     </insert>
 
+    <update id="modify" parameterType="UserDto">
+        Update user set password=#{password} where username=#{username}
+    </update>
+
+    <delete id="deleteById" parameterType="String">
+        delete from user where username=#{username}
+    </delete>
+
+    <delete id="deleteRole" parameterType="String">
+        delete from user_role where username=#{username}
+    </delete>
+
 </mapper>

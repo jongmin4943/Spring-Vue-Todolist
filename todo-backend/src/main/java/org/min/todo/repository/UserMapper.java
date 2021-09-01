@@ -14,6 +14,8 @@ public interface UserMapper {
 
     int deleteById(String username);
 
+    int deleteRole(String username);
+
     int save(UserDto userDto);
 
     int setRole(UserRole userRole);

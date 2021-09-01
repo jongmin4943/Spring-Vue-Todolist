@@ -22,7 +22,11 @@ public class PageDto {
     }
 
     public void setSize(int size) {
-        this.size = size < 10 ? size : 10;
+        this.size = size > 0 ? size : 10;
+    }
+
+    public int getSkip() {
+        return (this.page-1) * this.size;
     }
 
 

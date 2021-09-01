@@ -23,7 +23,8 @@ public class UserRepositoryTests {
 
     @Test
     public void testGet() {
-        UserDto dto = userService.getUser("test Insert");
+        UserDto dto = userService.getUser("test1");
+//        log.warn(encoder.matches("2222", dto.getPassword()));
         log.info(dto);
     }
 
@@ -31,11 +32,21 @@ public class UserRepositoryTests {
     public void testSave() {
 
         IntStream.rangeClosed(1,100).forEach(i->{
-            userService.register(UserDto.builder().username("test"+i).password(encoder.encode("1111")).build());
+            userService.register(UserDto.builder().username("test"+i).password("1111").build());
         });
 
 //        userService.register(UserDto.builder().username("test1").password(encoder.encode("1111")).build());
     }
 
+    @Test
+    public void testUpdate() {
+        UserDto dto = UserDto.builder().username("test2").password("1111").build();
+        userService.modify(dto);
+    }
+
+    @Test
+    public void testDelete() {
+        userService.remove("test1");
+    }
 
 }

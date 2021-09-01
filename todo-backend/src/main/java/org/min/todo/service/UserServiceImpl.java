@@ -82,6 +82,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String remove(String username) {
+        int roleResult = userMapper.deleteRole(username);
+        if(roleResult <= 0) throw new IllegalArgumentException("삭제를 실패 했습니다..");
         int result = userMapper.deleteById(username);
         return result > 0 ? "Success" : "Fail";
     }

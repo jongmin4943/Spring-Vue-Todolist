@@ -33,9 +33,15 @@ public class TodoServiceImpl implements TodoService {
     }
 
     @Override
+    public void complete(Long tno) {
+        int result = todoMapper.done(tno);
+        if(result <= 0) throw new IllegalArgumentException("완료에 실패 했습니다.");
+    }
+
+    @Override
     public TodoListDto getAllTodos(PageDto pageDto, String username) {
         List<TodoDto> result = todoMapper.getSearchedListWithUser(pageDto, username);
-        long totalCount = todoMapper.countAll(pageDto.getKeyword(),username);
+        long totalCount = todoMapper.countAll(pageDto,username);
         PageInfo pageInfo = new PageInfo(pageDto.getPage(), pageDto.getSize(), (int) totalCount, pageDto.getKeyword());
         return TodoListDto.builder().todoList(result).pageInfo(pageInfo).build();
     }

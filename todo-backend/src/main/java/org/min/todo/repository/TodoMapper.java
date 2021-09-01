@@ -15,11 +15,14 @@ public interface TodoMapper {
 
     int modify(TodoDto dto);
 
+    int done(Long tno);
+
     List<TodoDto> getSearchedListWithUser(@Param("pageDto") PageDto pageDto, @Param("username") String username);
 
-    long countAll(@Param("keyword") String keyword, @Param("username") String username);
+    long countAll(@Param("pageDto") PageDto pageDto, @Param("username") String username);
 
     TodoDto findById(Long tno);
 
     int delete(List<Long> tnos);
 }
+
