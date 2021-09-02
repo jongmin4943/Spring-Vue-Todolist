@@ -12,7 +12,11 @@
     </sql>
 
     <insert id="save" parameterType="TodoDto">
-        Insert into todo (title,username,done,created_date,updated_date) values (#{title},#{username},false,now(),now());
+        <selectKey resultType="long" keyProperty="position" order="BEFORE">
+            SELECT IFNULL(MAX(position), 0)+1 FROM todo where done = false
+        </selectKey>
+        Insert into todo (title,username,done,position,created_date,updated_date)
+        values (#{title},#{username},false,#{position},now(),now());
     </insert>
 
     <update id="modify" parameterType="TodoDto">
@@ -20,7 +24,10 @@
     </update>
 
     <update id="done" parameterType="long">
-        Update todo set done=!done,updated_date=now() where tno=#{tno}
+        <selectKey resultType="long" keyProperty="position" order="BEFORE">
+            SELECT IFNULL(MAX(position), 0)+1 FROM todo where done = true
+        </selectKey>
+        Update todo set done=!done,updated_date=now(),positon=#{positon} where tno=#{tno}
     </update>
 
     <delete id="delete" parameterType="List">
@@ -32,17 +39,17 @@
     </delete>
 
     <select id="findById" resultType="TodoDto">
-        select tno,title,username,done,created_date,updated_date
+        select tno,title,username,done,position,created_date,updated_date
         from todo
         where tno = #{tno}
     </select>
 
     <select id="getSearchedListWithUser" resultType="TodoDto">
-        select tno,title,username,done,created_date,updated_date
+        select tno,title,username,done,position,created_date,updated_date
         from todo
         where username = #{username}
         <include refid="search"/>
-        order by tno desc
+        order by position
         limit #{pageDto.skip} , #{pageDto.size}
     </select>
 
@@ -53,4 +60,24 @@
         <include refid="search"/>
     </select>
 
+    <update id="changePosition">
+        update todo set position=0 where tno=#{todoDto.tno};
+        <if test="todoDto.position gt target">
+            <![CDATA[
+            update todo
+            set position = (position + 1)
+            where position >= #{target}
+            and positon < #{todoDto.position};
+            ]]>
+        </if>
+        <if test="todoDto.position ls target">
+            <![CDATA[
+            update todo
+            set position = (position + 1)
+            where position > #{todoDto.position}
+            and positon <= #{target};
+            ]]>
+        </if>
+        update todo set positon = #{target} where #{todoDto.tno};
+    </update>
 </mapper>

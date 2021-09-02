@@ -7,6 +7,7 @@ const Todo = () => import(/* webpackChunkName: "Todo" */ "../pages/Todo.vue");
 const User = () => import(/* webpackChunkName: "User" */ "../pages/User.vue");
 const LogIn = () => import(/* webpackChunkName: "LogIn" */ "../pages/LogIn.vue");
 const SignUp = () => import(/* webpackChunkName: "SignUp" */ "../pages/SignUp.vue");
+const TodoCard = () => import(/* webpackChunkName: "TodoCard" */ "../components/TodoCard");
 
 export const router = new Router({
   mode: "history",
@@ -42,6 +43,15 @@ export const router = new Router({
           component: SignUp,
         },
       ],
+    },
+    {
+      path: "/todocard",
+      name: "TodoCard",
+      beforeEnter: (to, from, next) => {
+        const isUserLoggedIn = store.getters.isUserLoggedIn;
+        isUserLoggedIn ? next() : next("/user/login");
+      },
+      component: TodoCard,
     },
     {
       path: "/*",

@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <router-view />
+    <router-link :to="{ name: 'TodoCard' }">Card</router-link>
   </div>
 </template>
 

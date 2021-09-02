@@ -1,3 +1,4 @@
+
 Drop TABLE IF EXISTS user;
 create table user
 (
@@ -25,6 +26,7 @@ create table todo
     title        varchar(255)                         not null,
     username     varchar(50)                          not null,
     done         bit      default b'0'                not null,
+    position        bigint,
     created_date datetime default current_timestamp() null,
     updated_date datetime default current_timestamp() null,
     constraint fk_todo_user_

@@ -19,6 +19,8 @@ public class TodoDto {
 
     private String username;
 
+    private long position;
+
     private boolean done;
 
     private LocalDateTime createdDate;

@@ -89,5 +89,16 @@ public interface TodoMapper {
      * @return 삭제 된 row의 갯수
      */
     int delete(List<Long> tnos);
+
+    /**
+     * @Method Name : changeOrder
+     * @작성일 : 2021. 09. 02.
+     * @작성자 : J.M YOON
+     * @변경이력 :
+     * @Method 설명 : todo의 순서를 바꾼다.
+     * @param dto
+     * @return 수정 된 row의 갯수
+     */
+    int changePosition(@Param("todoDto") TodoDto todoDto,@Param("target") long target);
 }
 

@@ -8170,6 +8170,11 @@ vm-browserify@^1.0.1:
   resolved "https://registry.yarnpkg.com/vm-browserify/-/vm-browserify-1.1.2.tgz#78641c488b8e6ca91a75f511e7a3b32a86e5dda0"
   integrity sha512-2ham8XPWTONajOR0ohOKOHXkm3+gaBmGut3SRuu75xLd/RRaY6vqgh8NBYYk7+RW3u5AtzPQZG8F10LHkl0lAQ==
 
+vue-dndrop@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/vue-dndrop/-/vue-dndrop-1.0.1.tgz#89bf16f6c47598eadec5734beb975b8809b1851f"
+  integrity sha512-ZJI6dAVmniaYBzQNm1ogeEW6xzrFFHK+jAni4hy8qElhIVk1zOzaLHRUpYSAXJchCCA/bp642bXJCmI/GEgmyQ==
+
 vue-eslint-parser@^7.0.0:
   version "7.10.0"
   resolved "https://registry.yarnpkg.com/vue-eslint-parser/-/vue-eslint-parser-7.10.0.tgz#ea4e4b10fd10aa35c8a79ac783488d8abcd29be8"

@@ -20,6 +20,12 @@ const todoStore = {
     getTodoOnEdit(state) {
       return state.todoOnEdit;
     },
+    getTodoInProgress(state) {
+      return state.todoList.filter((todo) => !todo.done);
+    },
+    getCompletedTodo(state) {
+      return state.todoList.filter((todo) => todo.done);
+    },
   },
   mutations: {
     // state변화, 동기 처리

@@ -53,5 +53,9 @@ public class TodoController {
     public ResponseEntity<String> removeTodo(@RequestBody Map<String,List<Long>> tnoData) {
         return ResponseEntity.ok(todoService.remove(tnoData.get("tnos")));
     }
-
+    @PutMapping("/change/postion/{target}")
+    public ResponseEntity<String> changePositionTodo(@RequestBody TodoDto dto,@PathVariable Long target) {
+        todoService.changePositon(dto,target);
+        return ResponseEntity.ok(null);
+    }
 }
