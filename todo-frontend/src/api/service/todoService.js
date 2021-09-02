@@ -46,13 +46,20 @@ const todoService = () => {
   };
   const changePostion = async (data, target) => {
     return await instance({
-      url: `/change/postion/${target}`,
+      url: `/api/todo/change/position/${target}`,
+      method: "put",
+      data: data,
+    });
+  };
+  const changePostionAndDone = async (data, target) => {
+    return await instance({
+      url: `/api/todo/change/position/done/${target}`,
       method: "put",
       data: data,
     });
   };
 
-  return { fetchTodoList, fecthTodo, insertTodo, updateTodo, doneTodo, removeTodo, changePostion };
+  return { fetchTodoList, fecthTodo, insertTodo, updateTodo, doneTodo, removeTodo, changePostion, changePostionAndDone };
 };
 
 export default todoService();

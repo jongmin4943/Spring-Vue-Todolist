@@ -60,12 +60,18 @@ public class TodoServiceImpl implements TodoService {
     }
 
     @Override
-    public void changePositon(TodoDto dto,long target) {
-        boolean isMovingUp = dto.getPosition() == target;
-        if(isMovingUp) {
-            int result = todoMapper.changePosition(dto,target);
-            if(result <= 0) throw new IllegalArgumentException("이동에 실패 했습니다.");
-        }
-        throw new IllegalArgumentException("같은 곳 으로 이동 할 수 없습니다.");
+    @Transactional
+    public void changePosition(TodoDto dto,long target) {
+        boolean isMoving = dto.getPosition() == target;
+        if(dto.getPosition() == target) return;
+        int result = todoMapper.changePosition(dto,target);
+        if(result <= 0) throw new IllegalArgumentException("이동에 실패 했습니다.");
+    }
+
+    @Override
+    @Transactional
+    public void changePositionAndCompleteTodo(TodoDto dto, long target) {
+        int result = todoMapper.changePositionAndDone(dto,target);
+        if(result <= 0) throw new IllegalArgumentException("이동에 실패 했습니다.");
     }
 }

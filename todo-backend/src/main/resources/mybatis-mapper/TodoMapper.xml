@@ -24,10 +24,9 @@
     </update>
 
     <update id="done" parameterType="long">
-        <selectKey resultType="long" keyProperty="position" order="BEFORE">
-            SELECT IFNULL(MAX(position), 0)+1 FROM todo where done = true
-        </selectKey>
-        Update todo set done=!done,updated_date=now(),positon=#{positon} where tno=#{tno}
+        Update todo
+        set done=!done,updated_date=now()
+        where tno=#{tno}
     </update>
 
     <delete id="delete" parameterType="List">
@@ -67,17 +66,38 @@
             update todo
             set position = (position + 1)
             where position >= #{target}
-            and positon < #{todoDto.position};
+            and position < #{todoDto.position}
+            and done = #{todoDto.done};
             ]]>
         </if>
-        <if test="todoDto.position ls target">
+        <if test="todoDto.position lt target">
             <![CDATA[
             update todo
-            set position = (position + 1)
+            set position = (position - 1)
             where position > #{todoDto.position}
-            and positon <= #{target};
+            and position <= #{target}
+            and done = #{todoDto.done};
             ]]>
         </if>
-        update todo set positon = #{target} where #{todoDto.tno};
+        update todo set position = #{target} where tno=#{todoDto.tno};
+    </update>
+
+    <update id="changePositionAndDone">
+        Update todo
+        set position=(SELECT IFNULL(MAX(position), 0)+1 FROM todo where done = 1- #{todoDto.done}),updated_date=now(),done = 1- #{todoDto.done}
+        where tno=#{todoDto.tno};
+        <![CDATA[
+        update todo
+        set position = (position - 1)
+        where position > #{todoDto.position}
+        and done = #{todoDto.done};
+
+        update todo
+        set position = (position + 1)
+        where position >= #{target}
+        and position < (SELECT IFNULL(MAX(position), 0) FROM todo where done = 1- #{todoDto.done})
+        and done = 1- #{todoDto.done};
+        ]]>
+        update todo set position = #{target} where tno=#{todoDto.tno};
     </update>
 </mapper>

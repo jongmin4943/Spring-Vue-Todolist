@@ -1,6 +1,7 @@
 package org.min.todo.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.min.todo.dto.PageDto;
 import org.min.todo.dto.todo.TodoDto;
 import org.min.todo.dto.todo.TodoListDto;
@@ -16,6 +17,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/todo")
 @RequiredArgsConstructor
+@Log4j2
 public class TodoController {
 
     private final TodoService todoService;
@@ -53,9 +55,16 @@ public class TodoController {
     public ResponseEntity<String> removeTodo(@RequestBody Map<String,List<Long>> tnoData) {
         return ResponseEntity.ok(todoService.remove(tnoData.get("tnos")));
     }
-    @PutMapping("/change/postion/{target}")
-    public ResponseEntity<String> changePositionTodo(@RequestBody TodoDto dto,@PathVariable Long target) {
-        todoService.changePositon(dto,target);
+
+    @PutMapping("/change/position/{target}")
+    public ResponseEntity changePositionTodo(@PathVariable Long target, @RequestBody TodoDto dto) {
+        todoService.changePosition(dto,target);
         return ResponseEntity.ok(null);
     }
+    @PutMapping("/change/position/done/{target}")
+    public ResponseEntity changePositionAndCompleteTodo(@PathVariable Long target, @RequestBody TodoDto dto) {
+        todoService.changePositionAndCompleteTodo(dto,target);
+        return ResponseEntity.ok(null);
+    }
+
 }

@@ -2,7 +2,7 @@
 spring:
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://localhost:3306/mybatisTodo?serverTimezone=Asia/Seoul
+    url: jdbc:mariadb://localhost:3306/mybatisTodo?serverTimezone=Asia/Seoul&allowMultiQueries=true
     username: root
     password: root
 #    spring.datasource.schema: data/schema.sql

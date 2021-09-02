@@ -100,5 +100,7 @@ public interface TodoMapper {
      * @return 수정 된 row의 갯수
      */
     int changePosition(@Param("todoDto") TodoDto todoDto,@Param("target") long target);
+
+    int changePositionAndDone(@Param("todoDto") TodoDto todoDto,@Param("target") long target);
 }
 

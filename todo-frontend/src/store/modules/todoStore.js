@@ -75,6 +75,20 @@ const todoStore = {
       commit("refreshTodos", result.data);
       commit("cancelEdit");
     },
+    async applyDragToTheSame({ state, commit }, payload) {
+      const { movingTodo, targetTodo } = payload;
+      await todoService.changePostion(movingTodo, targetTodo.position);
+      const result = await todoService.fetchTodoList(state.pageInfo);
+      commit("refreshTodos", result.data);
+      commit("cancelEdit");
+    },
+    async applyDragToTheOther({ state, commit }, payload) {
+      const { movingTodo, targetTodo } = payload;
+      await todoService.changePostionAndDone(movingTodo, targetTodo.position);
+      const result = await todoService.fetchTodoList(state.pageInfo);
+      commit("refreshTodos", result.data);
+      commit("cancelEdit");
+    },
   },
 };
 export default todoStore;

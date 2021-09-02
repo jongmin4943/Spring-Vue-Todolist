@@ -21,7 +21,7 @@ public class ExceptionController {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ExceptionResponse> serverError(Exception e) {
-        log.error(e.getMessage());
+        log.error(e);
         return new ResponseEntity<>(new ExceptionResponse(500, "잘못된 요청입니다."), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -31,7 +31,7 @@ public class ExceptionController {
             BadCredentialsException.class
     })
     public ResponseEntity<?> generalError(Exception e) {
-        log.error(e.getMessage());
+        log.error(e);
         return new ResponseEntity<>(new ExceptionResponse(400, e.getMessage()), HttpStatus.BAD_REQUEST);
     }
 

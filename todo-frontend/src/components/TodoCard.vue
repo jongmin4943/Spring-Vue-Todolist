@@ -40,7 +40,6 @@
 <script>
 import { Container, Draggable } from "vue-dndrop";
 import { mapActions, mapGetters, mapMutations } from "vuex";
-
 export default {
   name: "TodoCard",
 
@@ -60,7 +59,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(["doneTodo", "deleteTodos", "getTodos"]),
+    ...mapActions(["doneTodo", "deleteTodos", "getTodos", "applyDragToTheSame", "applyDragToTheOther"]),
     ...mapMutations(["startEdit"]),
 
     removeTodo(tno) {
@@ -68,25 +67,20 @@ export default {
     },
 
     onDrop(collection, dropResult) {
-      console.log(dropResult);
-      this[collection] = this.applyDrag(this[collection], dropResult);
-    },
-
-    applyDrag(arr, dragResult) {
-      const { removedIndex, addedIndex, payload } = dragResult;
-      if (removedIndex === null && addedIndex === null) return arr;
-
-      const result = [...arr];
-      let itemToAdd = payload;
-
-      if (removedIndex !== null) {
-        itemToAdd = result.splice(removedIndex, 1)[0];
+      const movingTodo = dropResult.payload;
+      const targetTodo = this[collection][dropResult.addedIndex];
+      if (movingTodo && targetTodo) {
+        if (targetTodo.done === movingTodo.done) {
+          // console.log("같은 곳 이동.");
+          this.applyDragToTheSame({ movingTodo, targetTodo });
+        } else {
+          // console.log("다른 곳 이동.");
+          this.applyDragToTheOther({ movingTodo, targetTodo });
+        }
+      } else if (movingTodo && dropResult.addedIndex) {
+        // console.log("다른 곳 마지막으로 이동.");
+        this.applyDragToTheOther({ movingTodo, targetTodo: { position: dropResult.addedIndex + 1 } });
       }
-
-      if (addedIndex !== null) {
-        result.splice(addedIndex, 0, itemToAdd);
-      }
-      return result;
     },
 
     getTodoInProgressPayload(index) {

@@ -20,6 +20,7 @@ public interface TodoService {
 
     String remove(List<Long> tnos);
 
-    void changePositon(TodoDto dto,long target);
+    void changePosition(TodoDto dto,long target);
 
+    void changePositionAndCompleteTodo(TodoDto dto, long target);
 }
