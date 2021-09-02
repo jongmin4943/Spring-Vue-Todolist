@@ -1,11 +1,13 @@
 package org.min.todo.service;
 
+import io.jsonwebtoken.UnsupportedJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.min.todo.dto.user.TokenDto;
 import org.min.todo.dto.user.UserDto;
 import org.min.todo.entity.User;
 import org.min.todo.entity.UserRole;
+import org.min.todo.exception.UsernameDuplicateException;
 import org.min.todo.repository.UserRepository;
 import org.min.todo.security.jwt.JwtTokenProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -27,7 +29,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto register(UserDto dto) {
         boolean result = userRepository.findById(dto.getUsername()).isPresent();
-        if(result) throw new IllegalArgumentException("이미 존재하는 아이디 입니다.");
+        if(result) throw new UsernameDuplicateException("이미 존재하는 아이디 입니다.");
         dto.setPassword(encoder.encode(dto.getPassword()));
         dto.addRole(UserRole.USER);
         User user = userRepository.save(dtoToEntity(dto));
@@ -60,7 +62,7 @@ public class UserServiceImpl implements UserService {
                     .username(dto.getUsername())
                     .build();
         };
-        throw new IllegalArgumentException("잘못된 요청입니다.");
+        throw new UnsupportedJwtException("잘못된 요청입니다.");
     }
 
     @Override

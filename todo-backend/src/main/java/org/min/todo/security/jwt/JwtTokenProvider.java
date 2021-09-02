@@ -69,15 +69,15 @@ public class JwtTokenProvider {
                     .parseClaimsJws(authToken);
             return true;
         } catch (SignatureException ex) {
-            log.error("claims에서 오류로 검증이 실패");
+            log.error("claims에서 오류로 검증이 실패",ex);
         } catch (MalformedJwtException ex) {
-            log.error("구조적인 문제가 있는 JWToken");
+            log.error("구조적인 문제가 있는 JWToken",ex);
         } catch (ExpiredJwtException ex) {
-            log.error("유효기간 지난 JWToken");
+            log.error("유효기간 지난 JWToken",ex);
         } catch (UnsupportedJwtException ex) {
-            log.error("Unsupported JWToken");
+            log.error("Unsupported JWToken",ex);
         } catch (IllegalArgumentException ex) {
-            log.error("JWT claims string is empty.");
+            log.error("JWT claims string is empty.",ex);
         }
         return false;
     }

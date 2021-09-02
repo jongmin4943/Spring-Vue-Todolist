@@ -15,8 +15,10 @@ import java.util.Set;
 @ToString(exclude = {"userRoleSet"})
 public class User extends BaseEntity{
     @Id
+    @Column(length = 50)
     private String username;
 
+    @Column(length = 50,nullable = false)
     private String password;
 
     @ElementCollection(fetch = FetchType.LAZY)

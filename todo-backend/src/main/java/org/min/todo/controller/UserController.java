@@ -3,6 +3,7 @@ package org.min.todo.controller;
 import lombok.RequiredArgsConstructor;
 import org.min.todo.dto.user.TokenDto;
 import org.min.todo.dto.user.UserDto;
+import org.min.todo.exception.ForbiddenException;
 import org.min.todo.security.principal.PrincipalDetails;
 import org.min.todo.service.UserService;
 import org.springframework.http.ResponseEntity;
@@ -40,7 +41,7 @@ public class UserController {
     @PutMapping("/update")
     public ResponseEntity<UserDto> updateUser(@RequestBody UserDto dto,@AuthenticationPrincipal PrincipalDetails principalDetails) {
         if(principalDetails.getUsername().equals(dto.getUsername())) return ResponseEntity.ok(userService.modify(dto));
-        throw new IllegalArgumentException("권한이 없습니다.");
+        throw new ForbiddenException("권한이 없습니다.");
     }
 
     /**
@@ -70,7 +71,7 @@ public class UserController {
     @DeleteMapping("/delete/{username}")
     public ResponseEntity<String> removeUser(@PathVariable String username, @AuthenticationPrincipal PrincipalDetails principalDetails) {
         if(principalDetails.getUsername().equals(username)) return ResponseEntity.ok(userService.remove(username));
-        throw new IllegalArgumentException("권한이 없습니다.");
+        throw new ForbiddenException("권한이 없습니다.");
     }
 
     /**

@@ -17,6 +17,7 @@ public class Todo extends BaseEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long tno;
 
+    @Column(length = 255,nullable = false)
     private String title;
 
     private boolean done;

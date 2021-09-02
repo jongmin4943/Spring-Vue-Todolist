@@ -16,22 +16,25 @@ public class ExceptionController {
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
     public ResponseEntity<ExceptionResponse> emptyDataError(Exception e) {
+        log.error(e.getStackTrace());
         return new ResponseEntity<>(new ExceptionResponse(500, "존재하지 않는 데이터입니다."), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ExceptionResponse> serverError(Exception e) {
-        log.error(e.getMessage());
+        log.error(e.getMessage(),e.getStackTrace());
         return new ResponseEntity<>(new ExceptionResponse(500, "잘못된 요청입니다."), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler({
-            CustomException.class,
+            ForbiddenException.class,
             IllegalArgumentException.class,
-            BadCredentialsException.class
+            BadCredentialsException.class,
+            UserNotFoundException.class,
+            UsernameDuplicateException.class
     })
     public ResponseEntity<?> generalError(Exception e) {
-        log.error(e.getMessage());
+        log.error(e.getMessage(),e.getStackTrace());
         return new ResponseEntity<>(new ExceptionResponse(400, e.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
