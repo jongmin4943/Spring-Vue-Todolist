@@ -1,10 +1,13 @@
 package org.min.todo.service;
 
+import io.jsonwebtoken.UnsupportedJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.min.todo.dto.user.TokenDto;
 import org.min.todo.dto.user.UserDto;
 import org.min.todo.dto.user.UserRole;
+import org.min.todo.exception.UserNotFoundException;
+import org.min.todo.exception.UsernameDuplicateException;
 import org.min.todo.repository.UserMapper;
 import org.min.todo.security.jwt.JwtTokenProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -25,7 +28,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void register(UserDto dto) {
         UserDto user = userMapper.findByUsername(dto.getUsername());
-        if(user != null) throw new IllegalArgumentException("이미 존재하는 아이디 입니다.");
+        if(user != null) throw new UsernameDuplicateException("이미 존재하는 아이디 입니다.");
         dto.setPassword(encoder.encode(dto.getPassword()));
         int result = userMapper.save(dto);
         if(result <= 0) throw new IllegalArgumentException("등록에 실패 했습니다.");
@@ -36,7 +39,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public TokenDto login(UserDto dto) {
         UserDto user = userMapper.findByUsername(dto.getUsername());
-        if(user == null) throw new IllegalArgumentException(dto.getUsername() + "은 존재하지 않는 유저입니다.");
+        if(user == null) throw new UserNotFoundException(dto.getUsername() + "은 존재하지 않는 유저입니다.");
         boolean isPasswordCorrect = encoder.matches(dto.getPassword(),user.getPassword());
         if(isPasswordCorrect) {
            return generateTokenDto(user,jwtTokenProvider);
@@ -48,10 +51,10 @@ public class UserServiceImpl implements UserService {
     public TokenDto refreshToken(TokenDto dto) {
         if(jwtTokenProvider.validateToken(dto.getAccessToken())){
             UserDto user = userMapper.findByUsername(dto.getUsername());
-            if(user == null) throw new IllegalArgumentException(dto.getUsername() + "은 존재하지 않는 유저입니다.");
+            if(user == null) throw new UserNotFoundException(dto.getUsername() + "은 존재하지 않는 유저입니다.");
             return generateTokenDto(user,jwtTokenProvider);
         };
-        throw new IllegalArgumentException("잘못된 요청입니다.");
+        throw new UnsupportedJwtException("유효하지 않는 토큰입니다.");
     }
 
     @Override
@@ -64,7 +67,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto getUser(String username) {
         UserDto user = userMapper.findByUsername(username);
-        if(user == null) throw new IllegalArgumentException(username + "는 존재하지 않는 유저 입니다.");
+        if(user == null) throw new UserNotFoundException(username + "는 존재하지 않는 유저 입니다.");
         return user;
     }
 
