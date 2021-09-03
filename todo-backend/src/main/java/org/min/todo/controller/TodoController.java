@@ -52,8 +52,8 @@ public class TodoController {
     }
 
     @DeleteMapping("/")
-    public ResponseEntity<String> removeTodo(@RequestBody Map<String,List<Long>> tnoData) {
-        return ResponseEntity.ok(todoService.remove(tnoData.get("tnos")));
+    public ResponseEntity<String> removeTodo(@RequestBody Map<String,List<TodoDto>> todos) {
+        return ResponseEntity.ok(todoService.remove(todos.get("todos")));
     }
 
     @PutMapping("/change/position/{target}")

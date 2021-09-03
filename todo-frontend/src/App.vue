@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" v-loading="this.$store.getters.getLoading" element-loading-text="Loading..." element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.8)">
     <router-view />
     <router-link :to="{ name: 'TodoCard' }">Card</router-link>
   </div>
@@ -43,5 +43,9 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+}
+.el-loading-mask {
+  background-color: rgba(0, 0, 0, 0.5) !important;
+  width: 100vw;
 }
 </style>

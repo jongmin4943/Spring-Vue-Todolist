@@ -18,7 +18,7 @@ public interface TodoService {
 
     TodoDto getTodo(Long tno);
 
-    String remove(List<Long> tnos);
+    String remove(List<TodoDto> todos);
 
     void changePosition(TodoDto dto,long target);
 

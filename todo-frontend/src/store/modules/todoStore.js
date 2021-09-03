@@ -8,6 +8,7 @@ const todoStore = {
       tno: -1,
       title: "",
     },
+    loading: false,
   },
   getters: {
     //computed역할
@@ -26,11 +27,15 @@ const todoStore = {
     getCompletedTodo(state) {
       return state.todoList.filter((todo) => todo.done);
     },
+    getLoading(state) {
+      return state.loading;
+    },
   },
   mutations: {
     // state변화, 동기 처리
     refreshTodos(state, payload) {
       state = Object.assign(state, payload); // shallow copy
+      state.loading = false;
     },
     startEdit(state, payload) {
       state.todoOnEdit = state.todoList.find((todo) => {
@@ -50,32 +55,38 @@ const todoStore = {
     // mutation 로직처리, 비동기 처리
     async getTodos({ state, commit }, payload) {
       state.pageInfo = { ...state.pageInfo, ...payload };
+      state.loading = true;
       const result = await todoService.fetchTodoList(state.pageInfo);
       commit("refreshTodos", result.data);
     },
     async addTodo({ state, commit }, payload) {
+      state.loading = true;
       await todoService.insertTodo({ title: payload });
       state.pageInfo = { ...state.pageInfo, page: 1, keyword: "" };
       const result = await todoService.fetchTodoList(state.pageInfo);
       commit("refreshTodos", result.data);
     },
     async doneTodo({ state, commit }, payload) {
+      state.loading = true;
       await todoService.doneTodo(payload);
       const result = await todoService.fetchTodoList(state.pageInfo);
       commit("refreshTodos", result.data);
     },
     async deleteTodos({ state, commit }, payload) {
+      state.loading = true;
       await todoService.removeTodo(payload);
       const result = await todoService.fetchTodoList(state.pageInfo);
       commit("refreshTodos", result.data);
     },
     async editTodo({ state, commit }, payload) {
+      state.loading = true;
       await todoService.updateTodo(payload);
       const result = await todoService.fetchTodoList(state.pageInfo);
       commit("refreshTodos", result.data);
       commit("cancelEdit");
     },
     async applyDragToTheSame({ state, commit }, payload) {
+      state.loading = true;
       const { movingTodo, targetTodo } = payload;
       await todoService.changePostion(movingTodo, targetTodo.position);
       const result = await todoService.fetchTodoList(state.pageInfo);
@@ -83,6 +94,7 @@ const todoStore = {
       commit("cancelEdit");
     },
     async applyDragToTheOther({ state, commit }, payload) {
+      state.loading = true;
       const { movingTodo, targetTodo } = payload;
       await todoService.changePostionAndDone(movingTodo, targetTodo.position);
       const result = await todoService.fetchTodoList(state.pageInfo);

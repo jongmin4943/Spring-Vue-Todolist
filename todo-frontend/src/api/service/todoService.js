@@ -37,11 +37,11 @@ const todoService = () => {
       method: "put",
     });
   };
-  const removeTodo = async (tno = []) => {
+  const removeTodo = async (todos = []) => {
     return await instance({
       url: "/api/todo/",
       method: "delete",
-      data: { tnos: tno },
+      data: { todos },
     });
   };
   const changePostion = async (data, target) => {
@@ -59,7 +59,16 @@ const todoService = () => {
     });
   };
 
-  return { fetchTodoList, fecthTodo, insertTodo, updateTodo, doneTodo, removeTodo, changePostion, changePostionAndDone };
+  return {
+    fetchTodoList,
+    fecthTodo,
+    insertTodo,
+    updateTodo,
+    doneTodo,
+    removeTodo,
+    changePostion,
+    changePostionAndDone,
+  };
 };
 
 export default todoService();

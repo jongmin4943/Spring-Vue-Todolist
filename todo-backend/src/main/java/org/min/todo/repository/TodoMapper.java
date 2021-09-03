@@ -88,7 +88,9 @@ public interface TodoMapper {
      * @param tnos 삭제하고 싶은 tno의 list
      * @return 삭제 된 row의 갯수
      */
-    int delete(List<Long> tnos);
+    int delete(List<TodoDto> tnos);
+
+    int setPositionForDeletion(TodoDto dto);
 
     /**
      * @Method Name : changeOrder

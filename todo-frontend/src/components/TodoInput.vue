@@ -6,7 +6,7 @@
 </template>
 <script>
 import { mapActions } from "vuex";
-import { getPageKeywordQuery } from "../mixins/getPageKeywordQuery";
+import { mixins } from "../mixins";
 export default {
   data() {
     return {
@@ -31,7 +31,7 @@ export default {
       }
     },
   },
-  mixins: [getPageKeywordQuery],
+  mixins: [mixins],
 };
 </script>
 <style>

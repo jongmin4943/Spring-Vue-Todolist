@@ -32,10 +32,19 @@
     <delete id="delete" parameterType="List">
         delete from todo
         where tno in
-        <foreach collection="list" item="tno" separator="," open="(" close=")">
-            #{tno}
+        <foreach collection="list" item="todo" separator="," open="(" close=")">
+            #{todo.tno}
         </foreach>
     </delete>
+
+    <update id="setPositionForDeletion" parameterType="todoDto">
+        <![CDATA[
+        update todo
+        set position = (position - 1)
+        where position > #{position}
+        and done = #{done};
+        ]]>
+    </update>
 
     <select id="findById" resultType="TodoDto">
         select tno,title,username,done,position,created_date,updated_date

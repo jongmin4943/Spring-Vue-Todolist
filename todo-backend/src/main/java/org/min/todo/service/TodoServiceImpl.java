@@ -53,16 +53,18 @@ public class TodoServiceImpl implements TodoService {
     }
 
     @Override
-    public String remove(List<Long> tnos) {
-        int result = todoMapper.delete(tnos);
+    @Transactional
+    public String remove(List<TodoDto> todos) {
+        int result = todoMapper.delete(todos);
         if(result <= 0) throw new IllegalArgumentException("삭제에 실패 했습니다.");
+        int resultPositioning = todoMapper.setPositionForDeletion(todos.get(0));
+        if(resultPositioning <= 0) throw new IllegalArgumentException("이동에 실패 했습니다.");
         return "Success";
     }
 
     @Override
     @Transactional
     public void changePosition(TodoDto dto,long target) {
-        boolean isMoving = dto.getPosition() == target;
         if(dto.getPosition() == target) return;
         int result = todoMapper.changePosition(dto,target);
         if(result <= 0) throw new IllegalArgumentException("이동에 실패 했습니다.");
